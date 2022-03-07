@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.IntershipThesis" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.InternshipThesis" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -14,12 +14,12 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.IntershipThesis.NoActionBar">
+    <style name="Theme.InternshipThesis.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.IntershipThesis.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.InternshipThesis.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.IntershipThesis.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.InternshipThesis.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

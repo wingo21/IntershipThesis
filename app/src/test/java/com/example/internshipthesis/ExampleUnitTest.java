@@ -1,4 +1,4 @@
-package com.example.intershipthesis;
+package com.example.internshipthesis;
 
 import org.junit.Test;
 

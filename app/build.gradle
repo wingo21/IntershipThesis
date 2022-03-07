@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.example.intershipthesis"
-        minSdkVersion 26
-        targetSdkVersion 30
+        applicationId "com.example.internshipthesis"
+        minSdkVersion 29
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -35,4 +35,14 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation("androidx.car.app:app:1.1.0")
+
+
+
+    // For Android Automotive specific functionality
+    implementation("androidx.car.app:app-automotive:1.1.0")
+
+    // For testing
+    testImplementation("androidx.car.app:app-testing:1.2.0-beta02")
 }
