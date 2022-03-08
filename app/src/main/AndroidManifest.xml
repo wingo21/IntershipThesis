@@ -26,7 +26,7 @@
             android:resource="@xml/automotive_app_desc"/>
         <meta-data
             android:name="androidx.car.app.minCarApiLevel"
-            android:value="1" />
+            android:value="3" />
         <service
             android:name="com.example.internshipthesis.InternshipThesisService"
             android:exported="true">
