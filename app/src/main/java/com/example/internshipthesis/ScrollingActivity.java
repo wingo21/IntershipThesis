@@ -33,7 +33,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         RatingBar simpleRatingBar1 = findViewById(R.id.ratingBar1); // initiate a rating bar
         Float ratingNumber1 = simpleRatingBar1.getRating(); // get rating number from a rating bar
-        simpleRatingBar1.setRating((float) 3.5); // set default rating
+        simpleRatingBar1.setRating((float) 0.5); // set default rating
 
         Button submitButton1 = findViewById(R.id.submitButton1);
         // perform click event on button
@@ -46,7 +46,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         RatingBar simpleRatingBar2 = findViewById(R.id.ratingBar2); // initiate a rating bar
         Float ratingNumber2 = simpleRatingBar2.getRating(); // get rating number from a rating bar
-        simpleRatingBar2.setRating((float) 3.5); // set default rating
+        simpleRatingBar2.setRating((float) 1.0); // set default rating
 
         Button submitButton2 = findViewById(R.id.submitButton2);
         // perform click event on button
@@ -59,7 +59,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         RatingBar simpleRatingBar3 = findViewById(R.id.ratingBar3); // initiate a rating bar
         Float ratingNumber3 = simpleRatingBar3.getRating(); // get rating number from a rating bar
-        simpleRatingBar3.setRating((float) 3.5); // set default rating
+        simpleRatingBar3.setRating((float) 2.5); // set default rating
 
         Button submitButton3 = findViewById(R.id.submitButton3);
         // perform click event on button
@@ -72,7 +72,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         RatingBar simpleRatingBar4 = findViewById(R.id.ratingBar4); // initiate a rating bar
         Float ratingNumber = simpleRatingBar4.getRating(); // get rating number from a rating bar
-        simpleRatingBar4.setRating((float) 3.5); // set default rating
+        simpleRatingBar4.setRating((float) 1.5); // set default rating
 
         Button submitButton4 = findViewById(R.id.submitButton4);
         // perform click event on button
@@ -85,7 +85,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         RatingBar simpleRatingBar5 = findViewById(R.id.ratingBar5); // initiate a rating bar
         Float ratingNumber5 = simpleRatingBar5.getRating(); // get rating number from a rating bar
-        simpleRatingBar5.setRating((float) 3.5); // set default rating
+        simpleRatingBar5.setRating((float) 2.0); // set default rating
 
         Button submitButton5 = findViewById(R.id.submitButton5);
         // perform click event on button
@@ -98,7 +98,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         RatingBar simpleRatingBar6 = findViewById(R.id.ratingBar6); // initiate a rating bar
         Float ratingNumber6 = simpleRatingBar6.getRating(); // get rating number from a rating bar
-        simpleRatingBar6.setRating((float) 3.5); // set default rating
+        simpleRatingBar6.setRating((float) 5.0); // set default rating
 
         Button submitButton6 = findViewById(R.id.submitButton6);
         // perform click event on button
