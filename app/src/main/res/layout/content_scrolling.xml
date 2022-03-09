@@ -117,7 +117,7 @@
             app:layout_constraintTop_toBottomOf="@+id/cardView3">
 
             <include
-                layout="@layout/sample_card_3"
+                layout="@layout/sample_card_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -140,7 +140,7 @@
             app:layout_constraintTop_toBottomOf="@+id/cardView4">
 
             <include
-                layout="@layout/sample_card_3"
+                layout="@layout/sample_card_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -163,7 +163,7 @@
             app:layout_constraintTop_toBottomOf="@+id/cardView5">
 
             <include
-                layout="@layout/sample_card_3"
+                layout="@layout/sample_card_6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
