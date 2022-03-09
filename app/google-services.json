@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "784868647685",
+    "project_id": "internshipthesis-908c3",
+    "storage_bucket": "internshipthesis-908c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784868647685:android:ed4113302aefa616d64d6c",
+        "android_client_info": {
+          "package_name": "com.example.internshipthesis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "784868647685-m6bmbfdc5oeelcslqj6cihovurllbcra.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXi85Kxwn8KTcgtSm8UXOvonkrr6-D_fE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "784868647685-m6bmbfdc5oeelcslqj6cihovurllbcra.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
