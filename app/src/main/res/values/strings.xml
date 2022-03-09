@@ -10,12 +10,12 @@
         appointment cards
     </string>
     <string name="card_text_sample">this is a sample text for cards layout</string>
-    <string name="Text1_Card1">Sample Text\n (TBU)</string>
-    <string name="Text1_Card2">Sample Text\n (TBU)</string>
-    <string name="Text1_Card3">Sample Text\n (TBU)</string>
-    <string name="Text1_Card4">Sample Text\n (TBU)</string>
-    <string name="Text1_Card5">Sample Text\n (TBU)</string>
-    <string name="Text1_Card6">Sample Text\n (TBU)</string>
+    <string name="Text1_Card1">Name Surname W1</string>
+    <string name="Text1_Card2">Name Surname W2</string>
+    <string name="Text1_Card3">Name Surname W3</string>
+    <string name="Text1_Card4">Name Surname W4</string>
+    <string name="Text1_Card5">Name Surname W5</string>
+    <string name="Text1_Card6">Name Surname W6</string>
     <string name="Desc_Photo_Card1">Foto operatore 1</string>
     <string name="Desc_Photo_Card2">Foto operatore 2</string>
     <string name="Desc_Photo_Card3">Foto operatore 3</string>
@@ -23,4 +23,5 @@
     <string name="Desc_Photo_Card5">Foto operatore 5</string>
     <string name="Desc_Photo_Card6">Foto operatore 6</string>
     <string name="Text_Card_List_Beginning">Available appointments slots :</string>
+    <string name="rating_button">Submit</string>
 </resources>
