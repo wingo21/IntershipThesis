@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -15,8 +17,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,8 +34,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
@@ -38,97 +47,216 @@ public class ScrollingActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    String name1;
+    String name2;
+    String name3;
+    String name4;
+    String name5;
+    String name6;
+
+    float rating1;
+    float rating2;
+    float rating3;
+    float rating4;
+    float rating5;
+    float rating6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_scrolling);
         Toolbar toolbar = findViewById(R.id.toolbar);
+
+        TextView nameWorker1 = findViewById(R.id.nameWorker1);
+        TextView nameWorker2 = findViewById(R.id.nameWorker2);
+        TextView nameWorker3 = findViewById(R.id.nameWorker3);
+        TextView nameWorker4 = findViewById(R.id.nameWorker4);
+        TextView nameWorker5 = findViewById(R.id.nameWorker5);
+        TextView nameWorker6 = findViewById(R.id.nameWorker6);
+
+        RatingBar simpleRatingBar1 = findViewById(R.id.ratingBar1);
+        RatingBar simpleRatingBar2 = findViewById(R.id.ratingBar2);
+        RatingBar simpleRatingBar3 = findViewById(R.id.ratingBar3);
+        RatingBar simpleRatingBar4 = findViewById(R.id.ratingBar4);
+        RatingBar simpleRatingBar5 = findViewById(R.id.ratingBar5);
+        RatingBar simpleRatingBar6 = findViewById(R.id.ratingBar6);
+
         //setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
+
+        DocumentReference docRef1 = db.collection("workers").document("worker1");
+        docRef1.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    name1 = document.toObject(Classes.Worker.class).getName();
+                    nameWorker1.setText(name1);
+                    rating1 = document.toObject(Classes.Worker.class).getRating();
+                    simpleRatingBar1.setRating(rating1);
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+
+        /*db.collection("workers")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });*/
+
+        DocumentReference docRef2 = db.collection("workers").document("worker2");
+        docRef2.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    name2 = document.toObject(Classes.Worker.class).getName();
+                    nameWorker2.setText(name2);
+                    rating2 = document.toObject(Classes.Worker.class).getRating();
+                    simpleRatingBar2.setRating(rating2);
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+
+        DocumentReference docRef3 = db.collection("workers").document("worker3");
+        docRef3.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    name3 = document.toObject(Classes.Worker.class).getName();
+                    nameWorker3.setText(name3);
+                    rating3 = document.toObject(Classes.Worker.class).getRating();
+                    simpleRatingBar3.setRating(rating3);
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+
+        DocumentReference docRef4 = db.collection("workers").document("worker4");
+        docRef4.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    name4 = document.toObject(Classes.Worker.class).getName();
+                    nameWorker4.setText(name4);
+                    rating4 = document.toObject(Classes.Worker.class).getRating();
+                    simpleRatingBar4.setRating(rating4);
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+
+        DocumentReference docRef5 = db.collection("workers").document("worker5");
+        docRef5.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    name5 = document.toObject(Classes.Worker.class).getName();
+                    nameWorker5.setText(name5);
+                    rating5 = document.toObject(Classes.Worker.class).getRating();
+                    simpleRatingBar5.setRating(rating5);
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+
+        DocumentReference docRef6 = db.collection("workers").document("worker6");
+        docRef6.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    name6 = document.toObject(Classes.Worker.class).getName();
+                    nameWorker6.setText(name6);
+                    rating6 = document.toObject(Classes.Worker.class).getRating();
+                    simpleRatingBar6.setRating(rating6);
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
 
-        RatingBar simpleRatingBar1 = findViewById(R.id.ratingBar1); // initiate a rating bar
-        Float ratingNumber1 = simpleRatingBar1.getRating(); // get rating number from a rating bar
-        simpleRatingBar1.setRating((float) 0.5); // set default rating
-
         Button submitButton1 = findViewById(R.id.submitButton1);
         // perform click event on button
         submitButton1.setOnClickListener(v -> {
             // get values and then displayed in a toast
-            String totalStars1 = "Total Stars = " + simpleRatingBar1.getNumStars();
-            String rating1 = "Rating = " + simpleRatingBar1.getRating();
-            Toast.makeText(getApplicationContext(), totalStars1 + "\n" + rating1, Toast.LENGTH_LONG).show();
+            String rating1 = "On a scale of 5 Stars\n Rating = " + simpleRatingBar1.getRating();
+            Toast.makeText(getApplicationContext(), rating1, Toast.LENGTH_LONG).show();
         });
-
-        RatingBar simpleRatingBar2 = findViewById(R.id.ratingBar2); // initiate a rating bar
-        Float ratingNumber2 = simpleRatingBar2.getRating(); // get rating number from a rating bar
-        simpleRatingBar2.setRating((float) 1.0); // set default rating
 
         Button submitButton2 = findViewById(R.id.submitButton2);
         // perform click event on button
         submitButton2.setOnClickListener(v -> {
             // get values and then displayed in a toast
-            String totalStars2 = "Total Stars = " + simpleRatingBar2.getNumStars();
-            String rating2 = "Rating = " + simpleRatingBar2.getRating();
-            Toast.makeText(getApplicationContext(), totalStars2 + "\n" + rating2, Toast.LENGTH_LONG).show();
+            String rating2 = "On a scale of 5 Stars\n Rating = " + simpleRatingBar2.getRating();
+            Toast.makeText(getApplicationContext(), rating2, Toast.LENGTH_LONG).show();
         });
-
-        RatingBar simpleRatingBar3 = findViewById(R.id.ratingBar3); // initiate a rating bar
-        Float ratingNumber3 = simpleRatingBar3.getRating(); // get rating number from a rating bar
-        simpleRatingBar3.setRating((float) 2.5); // set default rating
 
         Button submitButton3 = findViewById(R.id.submitButton3);
         // perform click event on button
         submitButton3.setOnClickListener(v -> {
             // get values and then displayed in a toast
-            String totalStars3 = "Total Stars = " + simpleRatingBar3.getNumStars();
-            String rating3 = "Rating = " + simpleRatingBar3.getRating();
-            Toast.makeText(getApplicationContext(), totalStars3 + "\n" + rating3, Toast.LENGTH_LONG).show();
+            String rating3 = "On a scale of 5 Stars\n Rating = " + simpleRatingBar3.getRating();
+            Toast.makeText(getApplicationContext(), rating3, Toast.LENGTH_LONG).show();
         });
-
-        RatingBar simpleRatingBar4 = findViewById(R.id.ratingBar4); // initiate a rating bar
-        Float ratingNumber = simpleRatingBar4.getRating(); // get rating number from a rating bar
-        simpleRatingBar4.setRating((float) 1.5); // set default rating
 
         Button submitButton4 = findViewById(R.id.submitButton4);
         // perform click event on button
         submitButton4.setOnClickListener(v -> {
             // get values and then displayed in a toast
-            String totalStars4 = "Total Stars = " + simpleRatingBar4.getNumStars();
-            String rating4 = "Rating = " + simpleRatingBar4.getRating();
-            Toast.makeText(getApplicationContext(), totalStars4 + "\n" + rating4, Toast.LENGTH_LONG).show();
+            String rating4 = "On a scale of 5 Stars\n Rating = " + simpleRatingBar4.getRating();
+            Toast.makeText(getApplicationContext(), rating4, Toast.LENGTH_LONG).show();
         });
-
-        RatingBar simpleRatingBar5 = findViewById(R.id.ratingBar5); // initiate a rating bar
-        Float ratingNumber5 = simpleRatingBar5.getRating(); // get rating number from a rating bar
-        simpleRatingBar5.setRating((float) 2.0); // set default rating
 
         Button submitButton5 = findViewById(R.id.submitButton5);
         // perform click event on button
         submitButton5.setOnClickListener(v -> {
             // get values and then displayed in a toast
-            String totalStars5 = "Total Stars = " + simpleRatingBar5.getNumStars();
-            String rating5 = "Rating = " + simpleRatingBar5.getRating();
-            Toast.makeText(getApplicationContext(), totalStars5 + "\n" + rating5, Toast.LENGTH_LONG).show();
+            String rating5 = "On a scale of 5 Stars\n Rating = " + simpleRatingBar5.getRating();
+            Toast.makeText(getApplicationContext(), rating5, Toast.LENGTH_LONG).show();
         });
-
-        RatingBar simpleRatingBar6 = findViewById(R.id.ratingBar6); // initiate a rating bar
-        Float ratingNumber6 = simpleRatingBar6.getRating(); // get rating number from a rating bar
-        simpleRatingBar6.setRating((float) 5.0); // set default rating
 
         Button submitButton6 = findViewById(R.id.submitButton6);
         // perform click event on button
         submitButton6.setOnClickListener(v -> {
             // get values and then displayed in a toast
-            String totalStars6 = "Total Stars = " + simpleRatingBar6.getNumStars();
-            String rating6 = "Rating = " + simpleRatingBar6.getRating();
-            Toast.makeText(getApplicationContext(), totalStars6 + "\n" + rating6, Toast.LENGTH_LONG).show();
+            String rating6 = "On a scale of 5 Stars\n Rating = " + simpleRatingBar6.getRating();
+            Toast.makeText(getApplicationContext(), rating6, Toast.LENGTH_LONG).show();
         });
     }
 

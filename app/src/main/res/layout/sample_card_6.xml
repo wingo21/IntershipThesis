@@ -18,7 +18,7 @@
         app:srcCompat="@drawable/sample_worker_6" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/nameWorker6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Text1_Card6"
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/nameWorker6" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/submitButton6"
