@@ -34,4 +34,5 @@
     <string name="Username">Username</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="helper_signup">Fill out all fields below to complete Sign-Up:</string>
+    <string name="action_logout">Log-out</string>
 </resources>

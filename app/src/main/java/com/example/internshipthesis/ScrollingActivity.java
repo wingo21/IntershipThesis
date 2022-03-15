@@ -1,5 +1,6 @@
 package com.example.internshipthesis;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -149,6 +150,19 @@ public class ScrollingActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+
+        if(id == R.id.action_logout) {
+            openLoginActivity();
+            fAuth.signOut();
+            Toast.makeText(ScrollingActivity.this, "Log-out Successful", Toast.LENGTH_SHORT).show();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void openLoginActivity() {
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }
