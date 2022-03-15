@@ -3,6 +3,8 @@ package com.example.internshipthesis;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -11,6 +13,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -63,6 +66,13 @@ public class ScrollingActivity extends AppCompatActivity {
         RatingBar simpleRatingBar4 = findViewById(R.id.ratingBar4);
         RatingBar simpleRatingBar5 = findViewById(R.id.ratingBar5);
         RatingBar simpleRatingBar6 = findViewById(R.id.ratingBar6);
+
+        Button submitButton1 = findViewById(R.id.submitButton1);
+        Button submitButton2 = findViewById(R.id.submitButton2);
+        Button submitButton3 = findViewById(R.id.submitButton3);
+        Button submitButton4 = findViewById(R.id.submitButton4);
+        Button submitButton5 = findViewById(R.id.submitButton5);
+        Button submitButton6 = findViewById(R.id.submitButton6);
 
         //setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
@@ -180,51 +190,69 @@ public class ScrollingActivity extends AppCompatActivity {
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
 
-        Button submitButton1 = findViewById(R.id.submitButton1);
         // perform click event on button
         submitButton1.setOnClickListener(v -> {
+            DocumentReference changerating1 = db.collection("workers").document("worker1");
+            changerating1.update("rating", simpleRatingBar1.getRating()).addOnSuccessListener(aVoid ->
+                    Log.d(TAG, "DocumentSnapshot successfully updated!"))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             // get values and then displayed in a toast
-            String rating1 = "On a scale of 5 Stars\n Rating = " + simpleRatingBar1.getRating();
+            String rating1 = "On a scale of 5 Stars\n New rating = " + simpleRatingBar1.getRating();
             Toast.makeText(getApplicationContext(), rating1, Toast.LENGTH_LONG).show();
         });
 
-        Button submitButton2 = findViewById(R.id.submitButton2);
         // perform click event on button
         submitButton2.setOnClickListener(v -> {
+            DocumentReference changerating2 = db.collection("workers").document("worker2");
+            changerating2.update("rating", simpleRatingBar2.getRating()).addOnSuccessListener(aVoid ->
+                    Log.d(TAG, "DocumentSnapshot successfully updated!"))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             // get values and then displayed in a toast
-            String rating2 = "On a scale of 5 Stars\n Rating = " + simpleRatingBar2.getRating();
+            String rating2 = "On a scale of 5 Stars\n New rating = " + simpleRatingBar2.getRating();
             Toast.makeText(getApplicationContext(), rating2, Toast.LENGTH_LONG).show();
         });
 
-        Button submitButton3 = findViewById(R.id.submitButton3);
         // perform click event on button
         submitButton3.setOnClickListener(v -> {
+            DocumentReference changerating3 = db.collection("workers").document("worker3");
+            changerating3.update("rating", simpleRatingBar3.getRating()).addOnSuccessListener(aVoid ->
+                    Log.d(TAG, "DocumentSnapshot successfully updated!"))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             // get values and then displayed in a toast
-            String rating3 = "On a scale of 5 Stars\n Rating = " + simpleRatingBar3.getRating();
+            String rating3 = "On a scale of 5 Stars\n New rating = " + simpleRatingBar3.getRating();
             Toast.makeText(getApplicationContext(), rating3, Toast.LENGTH_LONG).show();
         });
 
-        Button submitButton4 = findViewById(R.id.submitButton4);
         // perform click event on button
         submitButton4.setOnClickListener(v -> {
+            DocumentReference changerating4 = db.collection("workers").document("worker4");
+            changerating4.update("rating", simpleRatingBar4.getRating()).addOnSuccessListener(aVoid ->
+                    Log.d(TAG, "DocumentSnapshot successfully updated!"))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             // get values and then displayed in a toast
-            String rating4 = "On a scale of 5 Stars\n Rating = " + simpleRatingBar4.getRating();
+            String rating4 = "On a scale of 5 Stars\n New rating = " + simpleRatingBar4.getRating();
             Toast.makeText(getApplicationContext(), rating4, Toast.LENGTH_LONG).show();
         });
 
-        Button submitButton5 = findViewById(R.id.submitButton5);
         // perform click event on button
         submitButton5.setOnClickListener(v -> {
+            DocumentReference changerating5 = db.collection("workers").document("worker5");
+            changerating5.update("rating", simpleRatingBar5.getRating()).addOnSuccessListener(aVoid ->
+                    Log.d(TAG, "DocumentSnapshot successfully updated!"))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             // get values and then displayed in a toast
-            String rating5 = "On a scale of 5 Stars\n Rating = " + simpleRatingBar5.getRating();
+            String rating5 = "On a scale of 5 Stars\n New rating = " + simpleRatingBar5.getRating();
             Toast.makeText(getApplicationContext(), rating5, Toast.LENGTH_LONG).show();
         });
 
-        Button submitButton6 = findViewById(R.id.submitButton6);
         // perform click event on button
         submitButton6.setOnClickListener(v -> {
+            DocumentReference changerating6 = db.collection("workers").document("worker6");
+            changerating6.update("rating", simpleRatingBar6.getRating()).addOnSuccessListener(aVoid ->
+                    Log.d(TAG, "DocumentSnapshot successfully updated!"))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             // get values and then displayed in a toast
-            String rating6 = "On a scale of 5 Stars\n Rating = " + simpleRatingBar6.getRating();
+            String rating6 = "On a scale of 5 Stars\n New rating = " + simpleRatingBar6.getRating();
             Toast.makeText(getApplicationContext(), rating6, Toast.LENGTH_LONG).show();
         });
     }
