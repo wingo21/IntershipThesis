@@ -1,10 +1,5 @@
 package com.example.internshipthesis;
 
-
-import android.widget.RatingBar;
-
-import java.util.ArrayList;
-
 /**
  * Classe per la gestione degli elementi da memorizzare nel database
  * */

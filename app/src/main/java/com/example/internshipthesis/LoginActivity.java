@@ -9,11 +9,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -25,11 +20,8 @@ public class LoginActivity extends Activity {
     Button login, signup;
     EditText email_field, password_field;
     ProgressBar progressBar;
-    int c = 0;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    String s;
-    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,33 +59,6 @@ public class LoginActivity extends Activity {
             });
             progressBar.setVisibility(View.VISIBLE);
         });
-
-        /*login.setOnClickListener(v -> db.collection("users").whereEqualTo("username", username_field.getText().toString()).whereEqualTo("password", password_field.getText().toString())
-                .get()
-                .addOnCompleteListener(task -> {
-
-                    if (task.isSuccessful()) {
-
-                        for (QueryDocumentSnapshot q : task.getResult()) {
-
-                            s = q.getId();
-                            c++;
-                        }
-
-                        if (c > 0) {
-
-                            SharedPreferences settings = getApplicationContext().getSharedPreferences("Set", 0);
-                            SharedPreferences.Editor editor = settings.edit();
-                            editor.putString("ID", s);
-                            editor.apply();
-
-                            openScrollingActivity();
-                        } else {
-
-                            Toast.makeText(getApplicationContext(), "Username o password errata", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }));*/
 
         signup.setOnClickListener(v -> openSignupActivity());
     }
