@@ -35,4 +35,9 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="helper_signup">Fill out all fields below to complete Sign-Up:</string>
     <string name="action_logout">Log-out</string>
+    <string name="save_changes">Save changes</string>
+    <string name="modify_email">New Email</string>
+    <string name="modify_username">New username</string>
+    <string name="helper_settings">Here you can change your profile settings, fill out the boxes and click "Apply changes" to confirm</string>
+
 </resources>

@@ -3,8 +3,6 @@ package com.example.internshipthesis;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -13,7 +11,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -52,6 +49,9 @@ public class ScrollingActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_scrolling);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
+        CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
+        toolBarLayout.setTitle(getTitle());
 
         TextView nameWorker1 = findViewById(R.id.nameWorker1);
         TextView nameWorker2 = findViewById(R.id.nameWorker2);
@@ -60,12 +60,12 @@ public class ScrollingActivity extends AppCompatActivity {
         TextView nameWorker5 = findViewById(R.id.nameWorker5);
         TextView nameWorker6 = findViewById(R.id.nameWorker6);
 
-        RatingBar simpleRatingBar1 = findViewById(R.id.ratingBar1);
-        RatingBar simpleRatingBar2 = findViewById(R.id.ratingBar2);
-        RatingBar simpleRatingBar3 = findViewById(R.id.ratingBar3);
-        RatingBar simpleRatingBar4 = findViewById(R.id.ratingBar4);
-        RatingBar simpleRatingBar5 = findViewById(R.id.ratingBar5);
-        RatingBar simpleRatingBar6 = findViewById(R.id.ratingBar6);
+        RatingBar RatingBar1 = findViewById(R.id.ratingBar1);
+        RatingBar RatingBar2 = findViewById(R.id.ratingBar2);
+        RatingBar RatingBar3 = findViewById(R.id.ratingBar3);
+        RatingBar RatingBar4 = findViewById(R.id.ratingBar4);
+        RatingBar RatingBar5 = findViewById(R.id.ratingBar5);
+        RatingBar RatingBar6 = findViewById(R.id.ratingBar6);
 
         Button submitButton1 = findViewById(R.id.submitButton1);
         Button submitButton2 = findViewById(R.id.submitButton2);
@@ -73,10 +73,6 @@ public class ScrollingActivity extends AppCompatActivity {
         Button submitButton4 = findViewById(R.id.submitButton4);
         Button submitButton5 = findViewById(R.id.submitButton5);
         Button submitButton6 = findViewById(R.id.submitButton6);
-
-        //setSupportActionBar(toolbar);
-        CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
-        toolBarLayout.setTitle(getTitle());
 
         DocumentReference docRef1 = db.collection("workers").document("worker1");
         docRef1.get().addOnCompleteListener(task -> {
@@ -87,7 +83,7 @@ public class ScrollingActivity extends AppCompatActivity {
                     name1 = document.toObject(Classes.Worker.class).getName();
                     nameWorker1.setText(name1);
                     rating1 = document.toObject(Classes.Worker.class).getRating();
-                    simpleRatingBar1.setRating(rating1);
+                    RatingBar1.setRating(rating1);
                 } else {
                     Log.d(TAG, "No such document");
                 }
@@ -105,7 +101,7 @@ public class ScrollingActivity extends AppCompatActivity {
                     name2 = document.toObject(Classes.Worker.class).getName();
                     nameWorker2.setText(name2);
                     rating2 = document.toObject(Classes.Worker.class).getRating();
-                    simpleRatingBar2.setRating(rating2);
+                    RatingBar2.setRating(rating2);
                 } else {
                     Log.d(TAG, "No such document");
                 }
@@ -123,7 +119,7 @@ public class ScrollingActivity extends AppCompatActivity {
                     name3 = document.toObject(Classes.Worker.class).getName();
                     nameWorker3.setText(name3);
                     rating3 = document.toObject(Classes.Worker.class).getRating();
-                    simpleRatingBar3.setRating(rating3);
+                    RatingBar3.setRating(rating3);
                 } else {
                     Log.d(TAG, "No such document");
                 }
@@ -141,7 +137,7 @@ public class ScrollingActivity extends AppCompatActivity {
                     name4 = document.toObject(Classes.Worker.class).getName();
                     nameWorker4.setText(name4);
                     rating4 = document.toObject(Classes.Worker.class).getRating();
-                    simpleRatingBar4.setRating(rating4);
+                    RatingBar4.setRating(rating4);
                 } else {
                     Log.d(TAG, "No such document");
                 }
@@ -159,7 +155,7 @@ public class ScrollingActivity extends AppCompatActivity {
                     name5 = document.toObject(Classes.Worker.class).getName();
                     nameWorker5.setText(name5);
                     rating5 = document.toObject(Classes.Worker.class).getRating();
-                    simpleRatingBar5.setRating(rating5);
+                    RatingBar5.setRating(rating5);
                 } else {
                     Log.d(TAG, "No such document");
                 }
@@ -177,7 +173,7 @@ public class ScrollingActivity extends AppCompatActivity {
                     name6 = document.toObject(Classes.Worker.class).getName();
                     nameWorker6.setText(name6);
                     rating6 = document.toObject(Classes.Worker.class).getRating();
-                    simpleRatingBar6.setRating(rating6);
+                    RatingBar6.setRating(rating6);
                 } else {
                     Log.d(TAG, "No such document");
                 }
@@ -193,66 +189,66 @@ public class ScrollingActivity extends AppCompatActivity {
         // perform click event on button
         submitButton1.setOnClickListener(v -> {
             DocumentReference changerating1 = db.collection("workers").document("worker1");
-            changerating1.update("rating", simpleRatingBar1.getRating()).addOnSuccessListener(aVoid ->
+            changerating1.update("rating", RatingBar1.getRating()).addOnSuccessListener(aVoid ->
                     Log.d(TAG, "DocumentSnapshot successfully updated!"))
                     .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             // get values and then displayed in a toast
-            String rating1 = "On a scale of 5 Stars\n New rating = " + simpleRatingBar1.getRating();
+            String rating1 = "On a scale of 5 Stars\n New rating = " + RatingBar1.getRating();
             Toast.makeText(getApplicationContext(), rating1, Toast.LENGTH_LONG).show();
         });
 
         // perform click event on button
         submitButton2.setOnClickListener(v -> {
             DocumentReference changerating2 = db.collection("workers").document("worker2");
-            changerating2.update("rating", simpleRatingBar2.getRating()).addOnSuccessListener(aVoid ->
+            changerating2.update("rating", RatingBar2.getRating()).addOnSuccessListener(aVoid ->
                     Log.d(TAG, "DocumentSnapshot successfully updated!"))
                     .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             // get values and then displayed in a toast
-            String rating2 = "On a scale of 5 Stars\n New rating = " + simpleRatingBar2.getRating();
+            String rating2 = "On a scale of 5 Stars\n New rating = " + RatingBar2.getRating();
             Toast.makeText(getApplicationContext(), rating2, Toast.LENGTH_LONG).show();
         });
 
         // perform click event on button
         submitButton3.setOnClickListener(v -> {
             DocumentReference changerating3 = db.collection("workers").document("worker3");
-            changerating3.update("rating", simpleRatingBar3.getRating()).addOnSuccessListener(aVoid ->
+            changerating3.update("rating", RatingBar3.getRating()).addOnSuccessListener(aVoid ->
                     Log.d(TAG, "DocumentSnapshot successfully updated!"))
                     .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             // get values and then displayed in a toast
-            String rating3 = "On a scale of 5 Stars\n New rating = " + simpleRatingBar3.getRating();
+            String rating3 = "On a scale of 5 Stars\n New rating = " + RatingBar3.getRating();
             Toast.makeText(getApplicationContext(), rating3, Toast.LENGTH_LONG).show();
         });
 
         // perform click event on button
         submitButton4.setOnClickListener(v -> {
             DocumentReference changerating4 = db.collection("workers").document("worker4");
-            changerating4.update("rating", simpleRatingBar4.getRating()).addOnSuccessListener(aVoid ->
+            changerating4.update("rating", RatingBar4.getRating()).addOnSuccessListener(aVoid ->
                     Log.d(TAG, "DocumentSnapshot successfully updated!"))
                     .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             // get values and then displayed in a toast
-            String rating4 = "On a scale of 5 Stars\n New rating = " + simpleRatingBar4.getRating();
+            String rating4 = "On a scale of 5 Stars\n New rating = " + RatingBar4.getRating();
             Toast.makeText(getApplicationContext(), rating4, Toast.LENGTH_LONG).show();
         });
 
         // perform click event on button
         submitButton5.setOnClickListener(v -> {
             DocumentReference changerating5 = db.collection("workers").document("worker5");
-            changerating5.update("rating", simpleRatingBar5.getRating()).addOnSuccessListener(aVoid ->
+            changerating5.update("rating", RatingBar5.getRating()).addOnSuccessListener(aVoid ->
                     Log.d(TAG, "DocumentSnapshot successfully updated!"))
                     .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             // get values and then displayed in a toast
-            String rating5 = "On a scale of 5 Stars\n New rating = " + simpleRatingBar5.getRating();
+            String rating5 = "On a scale of 5 Stars\n New rating = " + RatingBar5.getRating();
             Toast.makeText(getApplicationContext(), rating5, Toast.LENGTH_LONG).show();
         });
 
         // perform click event on button
         submitButton6.setOnClickListener(v -> {
             DocumentReference changerating6 = db.collection("workers").document("worker6");
-            changerating6.update("rating", simpleRatingBar6.getRating()).addOnSuccessListener(aVoid ->
+            changerating6.update("rating", RatingBar6.getRating()).addOnSuccessListener(aVoid ->
                     Log.d(TAG, "DocumentSnapshot successfully updated!"))
                     .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             // get values and then displayed in a toast
-            String rating6 = "On a scale of 5 Stars\n New rating = " + simpleRatingBar6.getRating();
+            String rating6 = "On a scale of 5 Stars\n New rating = " + RatingBar6.getRating();
             Toast.makeText(getApplicationContext(), rating6, Toast.LENGTH_LONG).show();
         });
     }
@@ -273,7 +269,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            openSettingsActivity();
         }
 
         if(id == R.id.action_logout) {
@@ -288,6 +284,12 @@ public class ScrollingActivity extends AppCompatActivity {
     private void openLoginActivity() {
 
         Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void openSettingsActivity() {
+
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 }
