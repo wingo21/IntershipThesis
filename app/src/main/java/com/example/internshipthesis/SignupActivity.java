@@ -58,19 +58,19 @@ public class SignupActivity extends Activity {
         signupButton.setOnClickListener(v -> {
 
             if (Objects.requireNonNull(inputUsername.getEditText()).getText().toString().trim().equals("") || Objects.requireNonNull(inputEmail.getEditText()).getText().toString().trim().equals("") || Objects.requireNonNull(inputPassword.getEditText()).getText().toString().trim().equals("")) {
-                Toast.makeText(getApplicationContext(), "I campi username, email e password non possono essere lasciati vuoti", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Username, Email and Password cannot be empty", Toast.LENGTH_SHORT).show();
             }
             else if (!isValidEmail(inputEmail.getEditText().getText().toString().trim())) {
-                Toast.makeText(getApplicationContext(), "Email non valida", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Invalid Email", Toast.LENGTH_SHORT).show();
             }
             else if (inputPassword.getEditText().getText().toString().length() < 8) {
-                Toast.makeText(getApplicationContext(), "La password deve contenere almeno 8 caratteri", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Password must be at least 8 characters long", Toast.LENGTH_SHORT).show();
             }
             else if (inputPassword.getEditText().getText().toString().contains(" ")) {
-                Toast.makeText(getApplicationContext(), "La password non puó contenere il carattere SPAZIO", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Password cannot contain space character", Toast.LENGTH_SHORT).show();
             }
             else if (!Objects.requireNonNull(confirmPassword.getEditText()).getText().toString().equals(inputPassword.getEditText().getText().toString())) {
-                Toast.makeText(getApplicationContext(), "Le password non coincidono", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
             }
             else {
 

@@ -34,10 +34,6 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //if(fAuth.getCurrentUser() != null) {
-        //    openScrollingActivity();
-        //}
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -54,6 +50,10 @@ public class LoginActivity extends Activity {
     protected void onStart() {
 
         super.onStart();
+
+        if(fAuth.getCurrentUser() != null) {
+            openScrollingActivity();
+        }
 
         login.setOnClickListener(view -> {
 
