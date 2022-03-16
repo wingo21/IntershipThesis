@@ -79,36 +79,13 @@ public class EditSettingsActivity extends AppCompatActivity {
                             if (task.isSuccessful() && !task.getResult().isEmpty()) {
                                 DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                                 String documentID = documentSnapshot.getId();
-                                db.collection("users")
-                                        .document(documentID)
-                                        .update(newEmail)
-                                        .addOnSuccessListener(aVoid -> {
-
-                                            Toast.makeText(EditSettingsActivity.this, "Email successfully updated", Toast.LENGTH_SHORT).show();
-                                            openScrollingActivity();
-                                        });
-
                                 user.updateEmail(e).addOnSuccessListener(aVoid -> {
                                     DocumentReference documentReference = db.collection("users").document(documentID);
                                     documentReference.update(newEmail);
-                                    Toast.makeText(EditSettingsActivity.this, "Email successfully updated part2", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(EditSettingsActivity.this, "Email successfully updated", Toast.LENGTH_SHORT).show();
+                                    openScrollingActivity();
                                 }).addOnFailureListener(e1 ->
                                         Toast.makeText(EditSettingsActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show());
-
-
-
-                                /*for (QueryDocumentSnapshot q : task.getResult()) {
-                                    email = e;
-                                }
-                                if (username) {
-                                    Toast.makeText(getApplicationContext(), "Email not available", Toast.LENGTH_SHORT).show();
-                                }
-                                else {
-                                    db.collection("users").document(id).update("email", e);
-
-                                    Toast.makeText(getApplicationContext(), "Changed successfully, reboot might be necessary", Toast.LENGTH_LONG).show();
-                                    openScrollingActivity();
-                                }*/
                             } else {
                                 Log.d("TAGERROR", "ERRORE");
                             }
@@ -130,9 +107,27 @@ public class EditSettingsActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Password must be at least 8 characters long", Toast.LENGTH_SHORT).show();
             }
             else {
-                db.collection("users").document(id).update("password", ip);
-                Toast.makeText(getApplicationContext(), "Changed successfully, reboot might be necessary", Toast.LENGTH_LONG).show();
-                openScrollingActivity();
+                Map<String,Object> newPassword = new HashMap<>();
+                newPassword.put("password", ip);
+
+                db.collection("users")
+                        .whereEqualTo("email", email)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                                DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                                String documentID = documentSnapshot.getId();
+                                user.updatePassword(ip).addOnSuccessListener(aVoid -> {
+                                    DocumentReference documentReference = db.collection("users").document(documentID);
+                                    documentReference.update(newPassword);
+                                    Toast.makeText(EditSettingsActivity.this, "Password successfully updated", Toast.LENGTH_SHORT).show();
+                                    openScrollingActivity();
+                                }).addOnFailureListener(e1 ->
+                                        Toast.makeText(EditSettingsActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show());
+                            } else {
+                                Log.d("TAGERROR", "ERRORE");
+                            }
+                        });
             }
         });
     }
