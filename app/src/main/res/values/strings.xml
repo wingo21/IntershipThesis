@@ -39,5 +39,9 @@
     <string name="modify_email">New Email</string>
     <string name="modify_username">New username</string>
     <string name="helper_settings">Here you can change your profile settings, fill out the boxes and click "Apply changes" to confirm</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="your_email">Your Email</string>
+    <string name="user_email">User Email</string>
+    <string name="email_logo">email logo</string>
 
 </resources>

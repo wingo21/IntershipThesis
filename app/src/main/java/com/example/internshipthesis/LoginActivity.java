@@ -47,18 +47,17 @@ public class LoginActivity extends Activity {
             openScrollingActivity();
         }
 
-        login.setOnClickListener(view -> {
-
-            fAuth.signInWithEmailAndPassword(email_field.getText().toString().trim(),password_field.getText().toString().trim()).addOnCompleteListener(task -> {
-                if(task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    openScrollingActivity();
-                }else{
-                    Toast.makeText(LoginActivity.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-            progressBar.setVisibility(View.VISIBLE);
-        });
+        login.setOnClickListener(view ->
+                fAuth.signInWithEmailAndPassword(email_field.getText().toString().trim(),password_field.getText().toString().trim())
+                        .addOnCompleteListener(task -> {
+                            if(task.isSuccessful()) {
+                                Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                progressBar.setVisibility(View.VISIBLE);
+                                openScrollingActivity();
+                            }else{
+                                Toast.makeText(LoginActivity.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+        }));
 
         signup.setOnClickListener(v -> openSignupActivity());
     }
