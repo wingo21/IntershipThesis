@@ -8,10 +8,15 @@ import android.util.Patterns;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -28,7 +33,7 @@ public class EditSettingsActivity extends AppCompatActivity {
     TextInputLayout inputUsername, inputEmail, inputPassword, confirmPassword;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    String username = fAuth.getCurrentUser().getDisplayName();
+    FirebaseUser user = fAuth.getCurrentUser();
     String email = fAuth.getCurrentUser().getEmail();
     String id = "null";
 
@@ -78,9 +83,17 @@ public class EditSettingsActivity extends AppCompatActivity {
                                         .document(documentID)
                                         .update(newEmail)
                                         .addOnSuccessListener(aVoid -> {
+
                                             Toast.makeText(EditSettingsActivity.this, "Email successfully updated", Toast.LENGTH_SHORT).show();
                                             openScrollingActivity();
                                         });
+
+                                user.updateEmail(e).addOnSuccessListener(aVoid -> {
+                                    DocumentReference documentReference = db.collection("users").document(documentID);
+                                    documentReference.update(newEmail);
+                                    Toast.makeText(EditSettingsActivity.this, "Email successfully updated part2", Toast.LENGTH_SHORT).show();
+                                }).addOnFailureListener(e1 ->
+                                        Toast.makeText(EditSettingsActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show());
 
 
 
