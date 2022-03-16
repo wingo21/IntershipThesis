@@ -24,9 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignupActivity"/>
-        <activity android:name=".ScrollingActivity"/>
-        <activity android:name=".SettingsActivity"/>
+        <activity android:name=".SignupActivity"
+            android:theme="@style/Theme.InternshipThesis.NoActionBar"/>
+        <activity android:name=".ScrollingActivity"
+            android:theme="@style/Theme.InternshipThesis.NoActionBar"/>
+        <activity android:name=".SettingsActivity"
+            android:theme="@style/Theme.InternshipThesis.NoActionBar"/>
 
         <meta-data
             android:name="com.google.android.gms.car.application"
