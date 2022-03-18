@@ -1,6 +1,8 @@
 package com.example.internshipthesis;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -17,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -52,11 +55,17 @@ public class ScrollingActivity extends AppCompatActivity {
 
     private void addCard(int workerNum) {
         layout = findViewById(R.id.thisone);
-        View card = getLayoutInflater().inflate(R.layout.sample_card_1, layout, false);
+        View card = getLayoutInflater().inflate(R.layout.card_layout, layout, false);
 
         TextView nameWorker = card.findViewById(R.id.nameWorker);
         RatingBar RatingBar = card.findViewById(R.id.ratingBar);
         Button submitButton = card.findViewById(R.id.submitButton);
+        ImageView workerImage = card.findViewById(R.id.workerImage);
+        String workerImgSrc = "worker"+ workerNum; //  this is image file name
+        String PACKAGE_NAME = getApplicationContext().getPackageName();
+        int imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+workerImgSrc , null, null);
+        System.out.println("IMG ID :: "+imgId);
+        System.out.println("PACKAGE_NAME :: "+PACKAGE_NAME);
 
         DocumentReference docRef = db.collection("workers").document(String.valueOf(workerNum));
         docRef.get().addOnCompleteListener(task -> {
@@ -68,6 +77,9 @@ public class ScrollingActivity extends AppCompatActivity {
                     nameWorker.setText(name);
                     rating = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getRating();
                     RatingBar.setRating(rating);
+                    //    Bitmap bitmap = BitmapFactory.decodeResource(getResources(),imgId);
+                    workerImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
+
                 } else {
                     Log.d(TAG, "No such document");
                 }
