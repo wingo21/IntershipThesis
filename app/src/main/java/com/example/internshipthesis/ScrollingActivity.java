@@ -19,9 +19,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
@@ -29,7 +32,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    CardView layout;
+    LinearLayout layout;
     String name;
     String name2;
     String name3;
@@ -76,7 +79,7 @@ public class ScrollingActivity extends AppCompatActivity {
         Button submitButton5 = findViewById(R.id.submitButton5);
         Button submitButton6 = findViewById(R.id.submitButton6);
 
-        for (int i = 0; i<6; i++){
+        for (int i = 1; i<7; i++){
             addCard(i);
         }
 
@@ -233,12 +236,12 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void addCard(int workerNum) {
-        layout = findViewById(R.id.cardView);
+        layout = findViewById(R.id.thisone);
         View card = getLayoutInflater().inflate(R.layout.sample_card_1, layout, false);
 
-        TextView nameWorker = findViewById(R.id.nameWorker);
-        RatingBar RatingBar = findViewById(R.id.ratingBar);
-        Button submitButton = findViewById(R.id.submitButton);
+        TextView nameWorker = card.findViewById(R.id.nameWorker);
+        RatingBar RatingBar = card.findViewById(R.id.ratingBar);
+        Button submitButton = card.findViewById(R.id.submitButton);
 
         DocumentReference docRef = db.collection("workers").document(String.valueOf(workerNum));
         docRef.get().addOnCompleteListener(task -> {
@@ -246,9 +249,9 @@ public class ScrollingActivity extends AppCompatActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    name = document.toObject(Classes.Worker.class).getName();
+                    name = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getName();
                     nameWorker.setText(name);
-                    rating = document.toObject(Classes.Worker.class).getRating();
+                    rating = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getRating();
                     RatingBar.setRating(rating);
                 } else {
                     Log.d(TAG, "No such document");
