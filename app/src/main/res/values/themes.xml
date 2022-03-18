@@ -19,7 +19,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.InternshipThesis.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.InternshipThesis.AppBarOverlay" parent="ThemeOverlay.AppCompat.DayNight">
+        <item name="colorSurface">#D02F13</item>
+    </style>
 
     <style name="Theme.InternshipThesis.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

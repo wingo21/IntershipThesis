@@ -35,19 +35,6 @@
                 app:popupTheme="@style/Theme.InternshipThesis.PopupOverlay" />
 
             <TextView
-                android:id="@+id/textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/app_name"
-                android:textColor="@color/white"
-                android:textSize="45sp"
-                app:layout_constraintEnd_toStartOf="@+id/toolbar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-            <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -55,10 +42,9 @@
                 android:layout_marginTop="80dp"
                 android:text="@string/login"
                 android:textColor="@color/white"
-                android:textSize="35sp"
+                android:textSize="60sp"
                 app:layout_constraintEnd_toStartOf="@+id/toolbar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textview" />
+                app:layout_constraintStart_toStartOf="parent" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -79,7 +65,9 @@
         android:id="@+id/email_edit_field"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="160dp"
+        android:layout_marginEnd="16dp"
         android:autofillHints=""
         android:focusable="true"
         android:hint="@string/enter_email"
@@ -97,6 +85,7 @@
         android:id="@+id/password_edit_field"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/password"
@@ -114,11 +103,10 @@
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/button_standard_back"
         android:text="@string/Login"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/password_edit_field"
         app:layout_constraintTop_toBottomOf="@+id/password_edit_field"
         tools:ignore="RelativeOverlap" />
 
@@ -130,10 +118,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
         android:background="@drawable/button_standard_back"
         android:text="@string/Signup"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/password_edit_field"
         app:layout_constraintTop_toBottomOf="@+id/password_edit_field" />
 
     <ProgressBar
@@ -141,7 +128,7 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
+        android:layout_marginBottom="16dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/email_edit_field"
         app:layout_constraintEnd_toEndOf="parent"
