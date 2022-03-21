@@ -1,5 +1,7 @@
 package com.example.internshipthesis;
 
+import java.util.Date;
+
 /**
  * Classe per la gestione degli elementi da memorizzare nel database
  * */
@@ -44,5 +46,16 @@ public class Classes {
 
         public void setName(String name) {this.name = name;}
         public void setRating(float rating) {this.rating = rating;}
+    }
+
+    public static class Schedules {
+        private String workerID;
+        private Date slot;
+
+        public String getWorkerID() {return workerID;}
+        public Date getSlot() {return slot;}
+
+        public void setWorkerID(String workerID) {this.workerID = workerID;}
+        public void setSlot(Date slot) {this.slot = slot;}
     }
 }

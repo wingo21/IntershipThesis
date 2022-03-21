@@ -28,6 +28,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Date;
 import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
@@ -39,6 +40,7 @@ public class ScrollingActivity extends AppCompatActivity {
     LinearLayout layout;
     String name;
     float rating;
+    Date slot;
     FloatingActionButton fab_main;
     ExtendedFloatingActionButton fab_worker;
     ExtendedFloatingActionButton fab_first_available;
@@ -99,11 +101,13 @@ public class ScrollingActivity extends AppCompatActivity {
         RatingBar RatingBar = card.findViewById(R.id.ratingBar);
         Button submitButton = card.findViewById(R.id.submitButton);
         ImageView workerImage = card.findViewById(R.id.workerImage);
+        TextView first_available_slot = card.findViewById(R.id.textView3);
         String workerImgSrc = "worker"+ workerNum; //  this is image file name
         String PACKAGE_NAME = getApplicationContext().getPackageName();
         int imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+workerImgSrc , null, null);
 
         DocumentReference docRef = db.collection("workers").document(String.valueOf(workerNum));
+        DocumentReference docRefSlot = db.collection("schedules").document();
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -113,8 +117,22 @@ public class ScrollingActivity extends AppCompatActivity {
                     nameWorker.setText(name);
                     rating = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getRating();
                     RatingBar.setRating(rating);
-                    //    Bitmap bitmap = BitmapFactory.decodeResource(getResources(),imgId);
                     workerImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
+                    /*docRefSlot.get().addOnCompleteListener(task2 -> {
+                        if (task2.isSuccessful()) {
+                            DocumentSnapshot document2 = task2.getResult();
+                            if (document.exists()) {
+                                slot = (Objects.requireNonNull(document2.toObject(Classes.Schedules.class))).getSlot();
+                                first_available_slot.setText(slot.toString());
+                            }else {
+                                Log.d(TAG, "No such document");
+                            }
+                        }else {
+                            Log.d(TAG, "get failed with ", task2.getException());
+                        }
+
+                    });*/
+
 
                 } else {
                     Log.d(TAG, "No such document");
@@ -175,14 +193,14 @@ public class ScrollingActivity extends AppCompatActivity {
 
     private void addCardFirstAvailable(){
 
-        db.collection("workers")
-                .orderBy("rating", Query.Direction.DESCENDING)
+        db.collection("schedules")
+                .orderBy("slot", Query.Direction.ASCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            workerID = document.getId();
-                            addCard(Integer.parseInt(workerID));
+                            workerID = document.getString("workerID");
+                            addCard(Integer.parseInt(Objects.requireNonNull(workerID)));
                         }
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
