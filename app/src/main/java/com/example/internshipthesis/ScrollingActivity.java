@@ -8,6 +8,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,7 +29,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
@@ -44,6 +47,7 @@ public class ScrollingActivity extends AppCompatActivity {
     FloatingActionButton fab_main;
     ExtendedFloatingActionButton fab_worker;
     ExtendedFloatingActionButton fab_first_available;
+    ExtendedFloatingActionButton fab_default_sort;
     String workerID;
 
     Boolean isFABOpen = false;
@@ -64,8 +68,10 @@ public class ScrollingActivity extends AppCompatActivity {
         fab_main = findViewById(R.id.fab_main);
         fab_worker = findViewById(R.id.fab_worker);
         fab_first_available = findViewById(R.id.fab_first_available);
+        fab_default_sort = findViewById(R.id.fab_default);
         fab_worker.hide();
         fab_first_available.hide();
+        fab_default_sort.hide();
 
         fab_main.setOnClickListener(view -> {
             if(!isFABOpen){
@@ -86,6 +92,14 @@ public class ScrollingActivity extends AppCompatActivity {
             addCardFirstAvailable();
             closeFABMenu();
         });
+
+        fab_default_sort.setOnClickListener(view -> {
+            removeCards();
+            addAllCards();
+            closeFABMenu();
+        });
+
+
     }
 
     private void removeCards() {
@@ -107,7 +121,6 @@ public class ScrollingActivity extends AppCompatActivity {
         int imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+workerImgSrc , null, null);
 
         DocumentReference docRef = db.collection("workers").document(String.valueOf(workerNum));
-        DocumentReference docRefSlot = db.collection("schedules").document();
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -118,21 +131,17 @@ public class ScrollingActivity extends AppCompatActivity {
                     rating = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getRating();
                     RatingBar.setRating(rating);
                     workerImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
-                    /*docRefSlot.get().addOnCompleteListener(task2 -> {
-                        if (task2.isSuccessful()) {
-                            DocumentSnapshot document2 = task2.getResult();
-                            if (document.exists()) {
-                                slot = (Objects.requireNonNull(document2.toObject(Classes.Schedules.class))).getSlot();
-                                first_available_slot.setText(slot.toString());
-                            }else {
-                                Log.d(TAG, "No such document");
-                            }
-                        }else {
-                            Log.d(TAG, "get failed with ", task2.getException());
-                        }
-
+                    //THIS PART DOESN'T WORK
+                    /*DocumentReference docRefDate = db.collection("schedules").document(document.getId());
+                    docRefDate.get().addOnCompleteListener(task2 -> {
+                       if(task2.isSuccessful()) {
+                           DocumentSnapshot document2 = task2.getResult();
+                           if(document2.exists()) {
+                               slot = (Objects.requireNonNull(document2.toObject(Classes.Schedules.class))).getSlot();
+                               first_available_slot.setText(slot.toString());
+                           }
+                       }
                     });*/
-
 
                 } else {
                     Log.d(TAG, "No such document");
@@ -213,16 +222,20 @@ public class ScrollingActivity extends AppCompatActivity {
         isFABOpen=true;
         fab_worker.show();
         fab_first_available.show();
+        fab_default_sort.show();
         fab_worker.animate().translationY(getResources().getDimension(R.dimen.standard_55));
         fab_first_available.animate().translationY(getResources().getDimension(R.dimen.standard_105));
+        fab_default_sort.animate().translationY(getResources().getDimension(R.dimen.standard_155));
     }
 
     private void closeFABMenu(){
         isFABOpen=false;
         fab_worker.animate().translationY(0);
         fab_first_available.animate().translationY(0);
+        fab_default_sort.animate().translationY(0);
         fab_worker.hide();
         fab_first_available.hide();
+        fab_default_sort.hide();
     }
 
     @Override

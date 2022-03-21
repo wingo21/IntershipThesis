@@ -51,6 +51,17 @@
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="bottom|end"
+        android:text="@string/default_sort"
+        app:icon="@drawable/ic_sort"
+        android:contentDescription="@string/main_fab_desc" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_worker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

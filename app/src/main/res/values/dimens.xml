@@ -9,6 +9,7 @@
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="standard_55">65dp</dimen>
     <dimen name="standard_105">130dp</dimen>
+    <dimen name="standard_155">195dp</dimen>
 </resources>
 
 

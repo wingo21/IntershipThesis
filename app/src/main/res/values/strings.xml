@@ -48,5 +48,7 @@
     <string name="available_at">Available at :</string>
     <string name="action_sort_worker">Order by best worker</string>
     <string name="action_sort_first_available">Order by first available</string>
+    <string name="action_sort_normal">Default Sort</string>
+    <string name="default_sort">Default Order</string>
 
 </resources>
