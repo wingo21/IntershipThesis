@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -40,6 +42,7 @@ public class ScrollingActivity extends AppCompatActivity {
     FloatingActionButton fab_main;
     ExtendedFloatingActionButton fab_worker;
     ExtendedFloatingActionButton fab_first_available;
+    String workerID;
 
     Boolean isFABOpen = false;
 
@@ -54,9 +57,7 @@ public class ScrollingActivity extends AppCompatActivity {
         CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
 
-        for (int i = 1; i<7; i++){
-            addCard(i);
-        }
+        addAllCards();
 
         fab_main = findViewById(R.id.fab_main);
         fab_worker = findViewById(R.id.fab_worker);
@@ -71,6 +72,23 @@ public class ScrollingActivity extends AppCompatActivity {
                 closeFABMenu();
             }
         });
+
+        fab_worker.setOnClickListener(view -> {
+            removeCards();
+            addCardWorker();
+            closeFABMenu();
+        });
+
+        fab_first_available.setOnClickListener(view -> {
+            removeCards();
+            addCardFirstAvailable();
+            closeFABMenu();
+        });
+    }
+
+    private void removeCards() {
+        layout = findViewById(R.id.thisone);
+        layout.removeAllViews();
     }
 
     private void addCard(int workerNum) {
@@ -84,8 +102,6 @@ public class ScrollingActivity extends AppCompatActivity {
         String workerImgSrc = "worker"+ workerNum; //  this is image file name
         String PACKAGE_NAME = getApplicationContext().getPackageName();
         int imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+workerImgSrc , null, null);
-        System.out.println("IMG ID :: "+imgId);
-        System.out.println("PACKAGE_NAME :: "+PACKAGE_NAME);
 
         DocumentReference docRef = db.collection("workers").document(String.valueOf(workerNum));
         docRef.get().addOnCompleteListener(task -> {
@@ -120,6 +136,59 @@ public class ScrollingActivity extends AppCompatActivity {
         });
 
         layout.addView(card);
+    }
+
+    private void addCardWorker() {
+
+        db.collection("workers")
+                .orderBy("rating", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            workerID = document.getId();
+                            addCard(Integer.parseInt(workerID));
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+
+    }
+
+    private void addAllCards() {
+
+        db.collection("workers")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            workerID = document.getId();
+                            addCard(Integer.parseInt(workerID));
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+
+    }
+
+    private void addCardFirstAvailable(){
+
+        db.collection("workers")
+                .orderBy("rating", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            workerID = document.getId();
+                            addCard(Integer.parseInt(workerID));
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+
     }
 
     private void showFABMenu(){
