@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,6 +38,11 @@ public class ScrollingActivity extends AppCompatActivity {
     LinearLayout layout;
     String name;
     float rating;
+    FloatingActionButton fab_main;
+    FloatingActionButton fab_worker;
+    FloatingActionButton fab_first_available;
+
+    Boolean isFABOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,18 @@ public class ScrollingActivity extends AppCompatActivity {
         for (int i = 1; i<7; i++){
             addCard(i);
         }
+
+        fab_main = findViewById(R.id.fab_main);
+        fab_worker = findViewById(R.id.fab_worker);
+        fab_first_available = findViewById(R.id.fab_first_available);
+
+        fab_main.setOnClickListener(view -> {
+            if(!isFABOpen){
+                showFABMenu();
+            }else{
+                closeFABMenu();
+            }
+        });
     }
 
     private void addCard(int workerNum) {
@@ -100,6 +119,18 @@ public class ScrollingActivity extends AppCompatActivity {
         });
 
         layout.addView(card);
+    }
+
+    private void showFABMenu(){
+        isFABOpen=true;
+        fab_worker.animate().translationY(getResources().getDimension(R.dimen.standard_55));
+        fab_first_available.animate().translationY(getResources().getDimension(R.dimen.standard_105));
+    }
+
+    private void closeFABMenu(){
+        isFABOpen=false;
+        fab_worker.animate().translationY(0);
+        fab_first_available.animate().translationY(0);
     }
 
     @Override

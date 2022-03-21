@@ -46,5 +46,7 @@
     <string name="settings">Settings</string>
     <string name="edit_settings">Profile</string>
     <string name="available_at">Available at :</string>
+    <string name="action_sort_worker">Order by best worker</string>
+    <string name="action_sort_first_available">Order by first available</string>
 
 </resources>
