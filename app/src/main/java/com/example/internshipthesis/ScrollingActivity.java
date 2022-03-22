@@ -1,5 +1,6 @@
 package com.example.internshipthesis;
 
+import android.animation.LayoutTransition;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -17,7 +18,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.transition.AutoTransition;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,6 +67,7 @@ public class ScrollingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
+        layout = findViewById(R.id.thisone);
 
         addAllCards();
 
@@ -113,12 +118,10 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void removeCards() {
-        layout = findViewById(R.id.thisone);
         layout.removeAllViews();
     }
 
     private void addCard(int workerNum) {
-        layout = findViewById(R.id.thisone);
         View card = getLayoutInflater().inflate(R.layout.card_layout, layout, false);
 
         TextView nameWorker = card.findViewById(R.id.nameWorker);
@@ -141,17 +144,20 @@ public class ScrollingActivity extends AppCompatActivity {
                     rating = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getRating();
                     RatingBar.setRating(rating);
                     workerImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
-                    //THIS PART DOESN'T WORK
-                    /*DocumentReference docRefDate = db.collection("schedules").document(document.getId());
-                    docRefDate.get().addOnCompleteListener(task2 -> {
-                       if(task2.isSuccessful()) {
-                           DocumentSnapshot document2 = task2.getResult();
-                           if(document2.exists()) {
-                               slot = (Objects.requireNonNull(document2.toObject(Classes.Schedules.class))).getSlot();
-                               first_available_slot.setText(slot.toString());
-                           }
-                       }
-                    });*/
+                    db.collection("schedules")
+                            /*.whereEqualTo("workerId", String.valueOf(workerNum))*/
+                            .orderBy("slot", Query.Direction.ASCENDING).limit(1)
+                            .get()
+                            .addOnCompleteListener(task1 -> {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document1 : task1.getResult()) {
+                                        slot = (Objects.requireNonNull(document1.toObject(Classes.Schedules.class))).getSlot();
+                                        first_available_slot.setText(slot.toString());
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                            });
 
                 } else {
                     Log.d(TAG, "No such document");
@@ -171,6 +177,8 @@ public class ScrollingActivity extends AppCompatActivity {
             String rating1 = "On a scale of 5 Stars\n New rating = " + RatingBar.getRating();
             Toast.makeText(getApplicationContext(), rating1, Toast.LENGTH_LONG).show();
         });
+
+        card.setOnClickListener(view -> openWorkerActivity(workerNum));
 
         layout.addView(card);
     }
@@ -285,6 +293,12 @@ public class ScrollingActivity extends AppCompatActivity {
     private void openSettingsActivity() {
 
         Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void openWorkerActivity(int workerNum) {
+        Intent intent = new Intent(this, WorkerActivity.class);
+        intent.putExtra("key",workerNum);
         startActivity(intent);
     }
 }

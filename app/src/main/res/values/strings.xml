@@ -50,5 +50,6 @@
     <string name="action_sort_first_available">Order by first available</string>
     <string name="action_sort_normal">Default Sort</string>
     <string name="default_sort">Default Order</string>
+    <string name="worker">Op. Profile</string>
 
 </resources>

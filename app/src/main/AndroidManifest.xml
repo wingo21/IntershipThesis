@@ -32,6 +32,8 @@
             android:theme="@style/Theme.InternshipThesis.NoActionBar"/>
         <activity android:name=".SettingsActivity"
             android:theme="@style/Theme.InternshipThesis.NoActionBar"/>
+        <activity android:name=".WorkerActivity"
+            android:theme="@style/Theme.InternshipThesis.NoActionBar"/>
 
         <meta-data
             android:name="com.google.android.gms.car.application"
