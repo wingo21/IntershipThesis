@@ -49,6 +49,7 @@ public class ScrollingActivity extends AppCompatActivity {
     ExtendedFloatingActionButton fab_first_available;
     ExtendedFloatingActionButton fab_default_sort;
     String workerID;
+    int mode = 0;
 
     Boolean isFABOpen = false;
 
@@ -82,20 +83,29 @@ public class ScrollingActivity extends AppCompatActivity {
         });
 
         fab_worker.setOnClickListener(view -> {
-            removeCards();
-            addCardWorker();
+            if(mode!=2) {
+                removeCards();
+                addCardWorker();
+                mode = 2;
+            }
             closeFABMenu();
         });
 
         fab_first_available.setOnClickListener(view -> {
-            removeCards();
-            addCardFirstAvailable();
+            if(mode != 1) {
+                removeCards();
+                addCardFirstAvailable();
+                mode = 1;
+            }
             closeFABMenu();
         });
 
         fab_default_sort.setOnClickListener(view -> {
-            removeCards();
-            addAllCards();
+            if(mode != 0) {
+                removeCards();
+                addAllCards();
+                mode = 0;
+            }
             closeFABMenu();
         });
 
