@@ -1,27 +1,28 @@
 package com.example.internshipthesis;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- *  Classe per gestire l'attività di registrazione
- * */
-public class SignupActivity extends Activity {
+public class SignupActivity extends AppCompatActivity {
 
     Button signupButton, backButton;
     TextInputLayout inputUsername, inputEmail, inputPassword, confirmPassword;
@@ -29,12 +30,16 @@ public class SignupActivity extends Activity {
     FirebaseAuth fAuth;
     String userID;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_signup);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
+        toolBarLayout.setTitle(getTitle());
 
         signupButton = findViewById(R.id.signupButton);
         backButton = findViewById(R.id.backButton);
@@ -74,7 +79,7 @@ public class SignupActivity extends Activity {
                 fAuth.createUserWithEmailAndPassword(inputEmail.getEditText().getText().toString().trim(),inputPassword.getEditText().getText().toString().trim()).addOnCompleteListener((task) -> {
                     if(task.isSuccessful()){
                         Toast.makeText(SignupActivity.this, "User Created", Toast.LENGTH_SHORT).show();
-                        userID = fAuth.getCurrentUser().getUid();
+                        userID = Objects.requireNonNull(fAuth.getCurrentUser()).getUid();
                         DocumentReference documentReference = db.collection("users").document(userID);
                         Map<String,Object> user = new HashMap<>();
                         user.put("name", inputUsername.getEditText().getText().toString().trim());
@@ -83,7 +88,7 @@ public class SignupActivity extends Activity {
                         documentReference.set(user).addOnSuccessListener(aVoid -> Log.d("TAG", "onSuccess: User profile is created for " + userID));
                         openLoginActivity();
                     }else{
-                        Toast.makeText(SignupActivity.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignupActivity.this, "Error!" + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -102,5 +107,4 @@ public class SignupActivity extends Activity {
     public static boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
-
 }

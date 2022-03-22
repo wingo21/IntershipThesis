@@ -2,20 +2,27 @@ package com.example.internshipthesis;
 
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Date;
 import java.util.Objects;
@@ -30,11 +37,16 @@ public class WorkerActivity extends AppCompatActivity {
     float rating;
     Date slot;
 
+    //TODO: Add more info to the worker profile (maybe a little description, full schedule, professional info, ecc)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
+        toolBarLayout.setTitle(getTitle());
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -65,13 +77,18 @@ public class WorkerActivity extends AppCompatActivity {
                     workerImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
                     db.collection("schedules")
                             /*.whereEqualTo("workerId", String.valueOf(workerNum))*/
-                            .orderBy("slot", Query.Direction.ASCENDING).limit(1)
+                            .orderBy("slot", Query.Direction.ASCENDING)
                             .get()
                             .addOnCompleteListener(task1 -> {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document1 : task1.getResult()) {
                                         slot = (Objects.requireNonNull(document1.toObject(Classes.Schedules.class))).getSlot();
-                                        first_available_slot.setText(slot.toString());
+                                        /*first_available_slot.setText(slot.toString());*/
+                                        LinearLayout linearLayout = new LinearLayout(this);
+                                        linearLayout.setOrientation(LinearLayout.VERTICAL);
+                                        TextView textView = new TextView(this);
+                                        textView.setText(slot.toString());
+                                        linearLayout.addView(textView);
                                     }
                                 } else {
                                     Log.d(TAG, "Error getting documents: ", task.getException());

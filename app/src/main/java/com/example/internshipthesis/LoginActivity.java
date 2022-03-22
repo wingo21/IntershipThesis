@@ -1,6 +1,5 @@
 package com.example.internshipthesis;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,13 +8,19 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
 
 /**
  *  Classe per gestire l'attività di login
  * */
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
 
     Button login, signup;
     EditText email_field, password_field;
@@ -28,6 +33,10 @@ public class LoginActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
+        toolBarLayout.setTitle(getTitle());
 
         login = findViewById(R.id.login_button);
         email_field = findViewById(R.id.email_edit_field);
@@ -55,7 +64,7 @@ public class LoginActivity extends Activity {
                                 progressBar.setVisibility(View.VISIBLE);
                                 openScrollingActivity();
                             }else{
-                                Toast.makeText(LoginActivity.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Error!" + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                             }
         }));
 

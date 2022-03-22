@@ -10,9 +10,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,7 +36,7 @@ public class EditSettingsActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseUser user = fAuth.getCurrentUser();
-    String email = fAuth.getCurrentUser().getEmail();
+    String email = Objects.requireNonNull(fAuth.getCurrentUser()).getEmail();
     String id = "null";
 
     @Override
@@ -42,6 +44,10 @@ public class EditSettingsActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_settings);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
+        toolBarLayout.setTitle(getTitle());
 
         saveEmailButton = findViewById(R.id.saveEmailButton);
         savePasswordButton = findViewById(R.id.savePasswordButton);

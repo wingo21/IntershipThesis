@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:fitsSystemWindows="true"
+    tools:context=".WorkerActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
         android:fitsSystemWindows="true"
-        android:theme="@style/Theme.InternshipThesis.AppBarOverlay"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:theme="@style/Theme.InternshipThesis.AppBarOverlay">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
@@ -31,95 +30,98 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/Theme.InternshipThesis.PopupOverlay" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="80dp"
-                android:text="@string/worker"
-                android:textColor="@color/white"
-                android:textSize="60sp"
-                app:layout_constraintEnd_toStartOf="@+id/toolbar"
-                app:layout_constraintStart_toStartOf="parent" />
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/workerImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="@string/Desc_Photo_Card1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar"
-        app:shapeAppearanceOverlay="@style/roundedImageView"
-        app:srcCompat="@drawable/worker1" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".WorkerActivity"
+        tools:showIn="@layout/activity_worker">
 
-    <TextView
-        android:id="@+id/nameWorker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:padding="10dp"
-        android:text="@string/Text1_Card1"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/workerImage"
-        app:layout_constraintTop_toTopOf="@+id/workerImage" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <RatingBar
-        android:id="@+id/ratingBar"
-        style="@style/Widget.AppCompat.RatingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleX="0.4"
-        android:scaleY="0.4"
-        app:layout_constraintBottom_toBottomOf="@+id/nameWorker"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nameWorker"
-        app:layout_constraintTop_toTopOf="@+id/nameWorker" />
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/workerImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/Desc_Photo_Card1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/roundedImageView"
+                app:srcCompat="@drawable/worker1" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/submitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="8dp"
-        android:padding="10dp"
-        android:text="@string/rating_button"
-        android:textColor="#fff"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:cornerRadius="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/nameWorker"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/nameWorker"
-        app:layout_constraintTop_toBottomOf="@+id/nameWorker"
-        tools:ignore="SmallSp" />
+            <TextView
+                android:id="@+id/nameWorker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:padding="10dp"
+                android:text="@string/Text1_Card1"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/workerImage"
+                app:layout_constraintTop_toTopOf="@+id/workerImage" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/available_at"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/workerImage" />
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="@style/Widget.AppCompat.RatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleX="0.4"
+                android:scaleY="0.4"
+                app:layout_constraintBottom_toBottomOf="@+id/nameWorker"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/nameWorker"
+                app:layout_constraintTop_toTopOf="@+id/nameWorker" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="@+id/textView2"
-        tools:ignore="HardcodedText" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/submitButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="8dp"
+                android:padding="10dp"
+                android:text="@string/rating_button"
+                android:textColor="#fff"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                app:cornerRadius="20dp"
+                app:layout_constraintEnd_toEndOf="@+id/nameWorker"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/nameWorker"
+                app:layout_constraintTop_toBottomOf="@+id/nameWorker"
+                tools:ignore="SmallSp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/available_at"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/workerImage" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="TextView"
+                app:layout_constraintBottom_toBottomOf="@+id/textView2"
+                app:layout_constraintStart_toEndOf="@+id/textView2"
+                app:layout_constraintTop_toTopOf="@+id/textView2"
+                tools:ignore="HardcodedText" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

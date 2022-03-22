@@ -34,20 +34,9 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/Theme.InternshipThesis.PopupOverlay" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="80dp"
-                android:text="@string/login"
-                android:textColor="@color/white"
-                android:textSize="60sp"
-                app:layout_constraintEnd_toStartOf="@+id/toolbar"
-                app:layout_constraintStart_toStartOf="parent" />
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
+
     <!--
     TextView che mostra
     il Titolo dell'Applicazione

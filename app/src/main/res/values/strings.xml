@@ -51,5 +51,10 @@
     <string name="action_sort_normal">Default Sort</string>
     <string name="default_sort">Default Order</string>
     <string name="worker">Op. Profile</string>
+    <string name="title_activity_worker">Operator Profile</string>
+    <string name="title_activity_signup">Sign-up</string>
+    <string name="title_activity_home">Home</string>
+    <string name="title_activity_edit_settings">Edit Settings</string>
+    <string name="title_activity_settings">Settings</string>
 
 </resources>
