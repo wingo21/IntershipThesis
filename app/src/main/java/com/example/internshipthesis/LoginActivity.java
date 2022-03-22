@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -23,7 +24,7 @@ import java.util.Objects;
 public class LoginActivity extends AppCompatActivity {
 
     Button login, signup;
-    EditText email_field, password_field;
+    TextInputLayout email_field, password_field;
     ProgressBar progressBar;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
@@ -57,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         login.setOnClickListener(view ->
-                fAuth.signInWithEmailAndPassword(email_field.getText().toString().trim(),password_field.getText().toString().trim())
+                fAuth.signInWithEmailAndPassword(Objects.requireNonNull(email_field.getEditText()).getText().toString().trim(), Objects.requireNonNull(password_field.getEditText()).getText().toString().trim())
                         .addOnCompleteListener(task -> {
                             if(task.isSuccessful()) {
                                 Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
