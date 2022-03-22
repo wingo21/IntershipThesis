@@ -44,11 +44,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!--
-            TextView che viene mostrata per aiutare
-            l'utente a capire il contesto della schermata e
-            rendere l'esperienza più intuitiva
-            -->
             <TextView
                 android:id="@+id/helper"
                 android:layout_width="0dp"
@@ -68,10 +63,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <!--
-            TextInputLayout per l'inserimento della nuova E-Mail
-            da salvare
-            -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputEmail"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -93,9 +84,6 @@
                     android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--
-            Button per salvare i cambiamenti apportati all'E-Mail
-            -->
             <Button
                 android:id="@+id/saveEmailButton"
                 android:layout_width="wrap_content"
@@ -110,10 +98,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/inputEmail"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <!--
-            TextInputLayout per l'inserimento della nuova password
-            da salvare
-            -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputPassword"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -135,10 +119,6 @@
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--
-            TextInputLayout per la conferma della nuova password
-            da salvare
-            -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/confirmPassword"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -158,9 +138,6 @@
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--
-            Button per salvare i cambiamenti apportati alla password
-            -->
             <Button
                 android:id="@+id/savePasswordButton"
                 android:layout_width="wrap_content"
