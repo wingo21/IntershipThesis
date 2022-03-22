@@ -106,8 +106,6 @@ public class ScrollingActivity extends AppCompatActivity {
             }
             closeFABMenu();
         });
-
-
     }
 
     private void removeCards() {
@@ -275,7 +273,6 @@ public class ScrollingActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     private void openLoginActivity() {
 

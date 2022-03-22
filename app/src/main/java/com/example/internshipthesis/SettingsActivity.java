@@ -2,7 +2,6 @@ package com.example.internshipthesis;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -23,7 +22,6 @@ public class SettingsActivity extends AppCompatActivity {
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     String username = Objects.requireNonNull(fAuth.getCurrentUser()).getDisplayName();
     String email = fAuth.getCurrentUser().getEmail();
-    String id = "null";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
         editSettings = findViewById(R.id.edit_settings_button);
         yourEmail = findViewById(R.id.your_email);
         emailShower = findViewById(R.id.email_shower);
-
         emailShower.setText(email);
-
         editSettings.setOnClickListener(view -> openEditSettingsActivity());
     }
 

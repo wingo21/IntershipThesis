@@ -30,7 +30,6 @@ public class SignupActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     String userID;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +46,6 @@ public class SignupActivity extends AppCompatActivity {
         inputEmail = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
         confirmPassword = findViewById(R.id.confirmPassword);
-
         fAuth = FirebaseAuth.getInstance();
     }
 

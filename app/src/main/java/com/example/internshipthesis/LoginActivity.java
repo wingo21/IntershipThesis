@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -44,9 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         password_field = findViewById(R.id.password_edit_field);
         signup = findViewById(R.id.signup_button);
         progressBar = findViewById(R.id.progressBar);
-
     }
-
 
     /** Crea la schermata di login */
     protected void onStart() {
