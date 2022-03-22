@@ -74,18 +74,19 @@ public class WorkerActivity extends AppCompatActivity {
                     workerImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
                     db.collection("schedules")
                             /*.whereEqualTo("workerId", String.valueOf(workerNum))*/
-                            .orderBy("slot", Query.Direction.ASCENDING)
+                            .orderBy("slot", Query.Direction.ASCENDING).limit(1)
                             .get()
                             .addOnCompleteListener(task1 -> {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document1 : task1.getResult()) {
                                         slot = (Objects.requireNonNull(document1.toObject(Classes.Schedules.class))).getSlot();
-                                        /*first_available_slot.setText(slot.toString());*/
-                                        LinearLayout linearLayout = new LinearLayout(this);
+                                        first_available_slot.setText(slot.toString());
+                                        //TODO: DOESN'T WORK YET
+                                        /*LinearLayout linearLayout = new LinearLayout(this);
                                         linearLayout.setOrientation(LinearLayout.VERTICAL);
                                         TextView textView = new TextView(this);
                                         textView.setText(slot.toString());
-                                        linearLayout.addView(textView);
+                                        linearLayout.addView(textView);*/
                                     }
                                 } else {
                                     Log.d(TAG, "Error getting documents: ", task.getException());
