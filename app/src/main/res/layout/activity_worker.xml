@@ -50,7 +50,7 @@
                 android:layout_height="100dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:contentDescription="@string/Desc_Photo_Card1"
+                android:contentDescription="@string/Desc_Photo_Card"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/roundedImageView"
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:padding="10dp"
-                android:text="@string/Text1_Card1"
+                android:text="@string/Text1_Card"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/workerImage"
                 app:layout_constraintTop_toTopOf="@+id/workerImage" />
