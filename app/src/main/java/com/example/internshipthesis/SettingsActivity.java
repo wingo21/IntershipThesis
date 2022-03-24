@@ -21,7 +21,7 @@ import java.util.Objects;
 public class SettingsActivity extends AppCompatActivity {
 
     Button editSettings;
-    TextView yourEmail, emailShower, userprofile;
+    TextView carShower, emailShower, userprofile;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     String username = Objects.requireNonNull(fAuth.getCurrentUser()).getUid();
@@ -38,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
         toolBarLayout.setTitle(getTitle());
 
         editSettings = findViewById(R.id.edit_settings_button);
-        yourEmail = findViewById(R.id.your_email);
+        carShower = findViewById(R.id.car_shower);
         emailShower = findViewById(R.id.email_shower);
         userprofile = findViewById(R.id.userprofile);
 
@@ -51,9 +51,13 @@ public class SettingsActivity extends AppCompatActivity {
 
             if (task.isSuccessful()) {
 
-                String x = task.getResult().getString("name");
-                userprofile.setText(String.format("Ciao %s! Qui puoi visualizzare e modificare informazioni riguardanti il tuo profilo", x));
-
+                String name = task.getResult().getString("name");
+                String carBrand = task.getResult().getString("carBrand");
+                String carModel = task.getResult().getString("carModel");
+                userprofile.setText(String.format(
+                        "Ciao %s! Qui puoi visualizzare e modificare informazioni riguardanti il tuo profilo\n " +
+                        "Ecco cosa sappiamo di te:", name));
+                carShower.setText(String.format("%s %s", carBrand, carModel));
             }
         });
 

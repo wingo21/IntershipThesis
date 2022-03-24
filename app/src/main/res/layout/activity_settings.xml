@@ -53,7 +53,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/email_shower" />
+                app:layout_constraintTop_toBottomOf="@+id/email_shower"
+                app:layout_constraintVertical_bias="1.0" />
 
             <TextView
                 android:id="@+id/your_email"
@@ -69,15 +70,15 @@
                 app:layout_constraintTop_toTopOf="@+id/email_logo" />
 
             <ImageView
-                android:id="@+id/email_logo"
+                android:id="@+id/car_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:contentDescription="@string/email_logo"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/car_logo"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/userprofile"
-                app:srcCompat="@drawable/ic_email" />
+                app:layout_constraintTop_toBottomOf="@+id/email_logo"
+                app:srcCompat="@drawable/ic_car" />
 
             <TextView
                 android:id="@+id/email_shower"
@@ -107,6 +108,41 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/your_car"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/your_car"
+                android:textColor="?attr/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/car_logo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/car_logo"
+                app:layout_constraintTop_toTopOf="@+id/car_logo" />
+
+            <ImageView
+                android:id="@+id/email_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/email_logo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/userprofile"
+                app:srcCompat="@drawable/ic_email" />
+
+            <TextView
+                android:id="@+id/car_shower"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/user_car"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/your_car"
+                app:layout_constraintTop_toTopOf="@+id/your_car" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>

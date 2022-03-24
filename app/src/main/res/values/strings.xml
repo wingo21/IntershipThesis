@@ -51,5 +51,8 @@
     <string name="car_brand">Car Brand</string>
     <string name="car_model">Car Model</string>
     <string name="tipo">tipo</string>
+    <string name="your_car">Your car:</string>
+    <string name="car_logo">car logo</string>
+    <string name="user_car">User car</string>
 
 </resources>
