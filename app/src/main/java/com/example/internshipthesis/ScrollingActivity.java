@@ -1,5 +1,6 @@
 package com.example.internshipthesis;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -40,7 +41,8 @@ public class ScrollingActivity extends AppCompatActivity {
     LinearLayout layout;
     String name;
     float rating;
-    Date slot;
+    Date slot = new Date(Long.MAX_VALUE);
+    Date slot2;
     FloatingActionButton fab_main;
     ExtendedFloatingActionButton fab_worker;
     ExtendedFloatingActionButton fab_first_available;
@@ -61,6 +63,19 @@ public class ScrollingActivity extends AppCompatActivity {
         CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
         layout = findViewById(R.id.thisone);
+
+        /*db.collection("future")
+                .document("1")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d(TAG, "DocumentSnapshot future data: " + document.getData());
+                            slot = (Objects.requireNonNull(document.toObject(Classes.Schedules.class))).getSlot();
+                        }
+                    }
+                });*/
 
         addAllCards();
 
@@ -112,6 +127,7 @@ public class ScrollingActivity extends AppCompatActivity {
         layout.removeAllViews();
     }
 
+    @SuppressLint("SetTextI18n")
     private void addCard(int workerNum) {
         View card = getLayoutInflater().inflate(R.layout.card_layout, layout, false);
 
@@ -135,15 +151,15 @@ public class ScrollingActivity extends AppCompatActivity {
                     rating = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getRating();
                     RatingBar.setRating(rating);
                     workerImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
+
                     db.collection("schedules")
-                            /*.whereEqualTo("workerId", String.valueOf(workerNum))*/
-                            .orderBy("slot", Query.Direction.ASCENDING).limit(1)
+                            .whereEqualTo("workerID", String.valueOf(workerNum))
+                            .whereEqualTo("booked", false)
                             .get()
                             .addOnCompleteListener(task1 -> {
-                                if (task.isSuccessful()) {
+                                if (task1.isSuccessful()) {
                                     for (QueryDocumentSnapshot document1 : task1.getResult()) {
-                                        slot = (Objects.requireNonNull(document1.toObject(Classes.Schedules.class))).getSlot();
-                                        first_available_slot.setText(slot.toString());
+                                        first_available_slot.setText("Currently available. Click to see when");
                                     }
                                 } else {
                                     Log.d(TAG, "Error getting documents: ", task.getException());

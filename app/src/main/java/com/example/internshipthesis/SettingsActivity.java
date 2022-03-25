@@ -5,15 +5,11 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
@@ -24,7 +20,7 @@ public class SettingsActivity extends AppCompatActivity {
     TextView carShower, emailShower, userprofile;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    String username = Objects.requireNonNull(fAuth.getCurrentUser()).getUid();
+    String user = Objects.requireNonNull(fAuth.getCurrentUser()).getUid();
     String email = Objects.requireNonNull(fAuth.getCurrentUser()).getEmail();
 
     @Override
@@ -46,7 +42,7 @@ public class SettingsActivity extends AppCompatActivity {
         editSettings.setOnClickListener(view -> openEditSettingsActivity());
 
         db.collection("users")
-                .document(username)
+                .document(user)
                 .get().addOnCompleteListener(task -> {
 
             if (task.isSuccessful()) {
@@ -55,8 +51,8 @@ public class SettingsActivity extends AppCompatActivity {
                 String carBrand = task.getResult().getString("carBrand");
                 String carModel = task.getResult().getString("carModel");
                 userprofile.setText(String.format(
-                        "Ciao %s! Qui puoi visualizzare e modificare informazioni riguardanti il tuo profilo\n " +
-                        "Ecco cosa sappiamo di te:", name));
+                        "Hey there %s! Here you can view and modify informations linked to your account.\n" +
+                        "Here's what we know about you:", name));
                 carShower.setText(String.format("%s %s", carBrand, carModel));
             }
         });

@@ -7,13 +7,13 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,8 +31,10 @@ public class WorkerActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     int workerNum;
     String name;
+    Date appointment_slot;
     float rating;
     Date slot;
+    LinearLayout layout;
 
     //TODO: Add more info to the worker profile (maybe a little description, full schedule, professional info, ecc)
 
@@ -55,11 +57,10 @@ public class WorkerActivity extends AppCompatActivity {
         RatingBar RatingBar = findViewById(R.id.ratingBar);
         Button submitButton = findViewById(R.id.submitButton);
         ImageView workerImage = findViewById(R.id.workerImage);
-        TextView first_available_slot = findViewById(R.id.textView3);
+        layout = findViewById(R.id.workerone);
         String workerImgSrc = "worker"+ workerNum; //  this is image file name
         String PACKAGE_NAME = getApplicationContext().getPackageName();
         int imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+workerImgSrc , null, null);
-
 
         DocumentReference docRef = db.collection("workers").document(String.valueOf(workerNum));
         docRef.get().addOnCompleteListener(task -> {
@@ -72,26 +73,6 @@ public class WorkerActivity extends AppCompatActivity {
                     rating = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getRating();
                     RatingBar.setRating(rating);
                     workerImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
-                    db.collection("schedules")
-                            /*.whereEqualTo("workerId", String.valueOf(workerNum))*/
-                            .orderBy("slot", Query.Direction.ASCENDING).limit(1)
-                            .get()
-                            .addOnCompleteListener(task1 -> {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document1 : task1.getResult()) {
-                                        slot = (Objects.requireNonNull(document1.toObject(Classes.Schedules.class))).getSlot();
-                                        first_available_slot.setText(slot.toString());
-                                        //TODO: DOESN'T WORK YET
-                                        /*LinearLayout linearLayout = new LinearLayout(this);
-                                        linearLayout.setOrientation(LinearLayout.VERTICAL);
-                                        TextView textView = new TextView(this);
-                                        textView.setText(slot.toString());
-                                        linearLayout.addView(textView);*/
-                                    }
-                                } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
-                                }
-                            });
 
                 } else {
                     Log.d(TAG, "No such document");
@@ -111,5 +92,43 @@ public class WorkerActivity extends AppCompatActivity {
             String rating1 = "On a scale of 5 Stars\n New rating = " + RatingBar.getRating();
             Toast.makeText(getApplicationContext(), rating1, Toast.LENGTH_LONG).show();
         });
+
+        getInfoForAppointments(workerNum);
+    }
+
+    private void getInfoForAppointments(int workerNum){
+        db.collection("schedules")
+                .whereEqualTo("workerID", String.valueOf(workerNum))
+                .whereEqualTo("booked", false)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            appointment_slot = (Objects.requireNonNull(document.toObject(Classes.Schedules.class))).getSlot();
+                            addAppointment(appointment_slot);
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+    }
+
+    private void addAppointment(Date appointment_date) {
+        View appointment = getLayoutInflater().inflate(R.layout.appointment_layout, layout, false);
+
+        TextView appointment_slot_textview = appointment.findViewById(R.id.appointment_slot);
+        Button bookButton = appointment.findViewById(R.id.bookButton);
+
+        appointment_slot_textview.setText(appointment_date.toString());
+
+        // perform click event on button
+        bookButton.setOnClickListener(v -> openDialog());
+
+        layout.addView(appointment);
+    }
+
+    private void openDialog() {
+        Dialog dialog = new Dialog();
+        dialog.show(getSupportFragmentManager(), "example dialog");
     }
 }
