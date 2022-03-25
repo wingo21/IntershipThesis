@@ -122,13 +122,22 @@ public class WorkerActivity extends AppCompatActivity {
         appointment_slot_textview.setText(appointment_date.toString());
 
         // perform click event on button
-        bookButton.setOnClickListener(v -> openDialog());
+        bookButton.setOnClickListener(v -> {
+            openDialog();
+        });
 
         layout.addView(appointment);
     }
 
     private void openDialog() {
         Dialog dialog = new Dialog();
-        dialog.show(getSupportFragmentManager(), "example dialog");
+        dialog.show(getSupportFragmentManager(), "confirm booking dialog");
+        /*removeAppointments();
+        getInfoForAppointments(workerNum);*/
+
+    }
+
+    private void removeAppointments() {
+        layout.removeAllViews();
     }
 }

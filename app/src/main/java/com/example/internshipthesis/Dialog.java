@@ -2,7 +2,6 @@ package com.example.internshipthesis;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,13 +9,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.Objects;
+
+import static android.content.ContentValues.TAG;
 
 public class Dialog extends AppCompatDialogFragment {
 
@@ -45,11 +44,10 @@ public class Dialog extends AppCompatDialogFragment {
     }
 
     private void updateFirestoreYes() {
-        String document = db.collection("schedules").document().getId();
-        DocumentReference docRef = db.collection("schedules").document(document);
-        docRef.update("booked", true);
-        docRef.update("bookedby", user);
-        Toast.makeText(getContext(), "Congratulations, you booked the appointment", Toast.LENGTH_SHORT).show();
+        //TODO:
+        // The dialog right now does nothing.
+        // The problem is that to update the document we need to know the document id,
+        // but as of now schedules documents have automatically generated it
     }
 
 }
