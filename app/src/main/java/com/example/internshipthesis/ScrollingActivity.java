@@ -64,19 +64,6 @@ public class ScrollingActivity extends AppCompatActivity {
         toolBarLayout.setTitle(getTitle());
         layout = findViewById(R.id.thisone);
 
-        /*db.collection("future")
-                .document("1")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            Log.d(TAG, "DocumentSnapshot future data: " + document.getData());
-                            slot = (Objects.requireNonNull(document.toObject(Classes.Schedules.class))).getSlot();
-                        }
-                    }
-                });*/
-
         addAllCards();
 
         fab_main = findViewById(R.id.fab_main);
@@ -152,8 +139,9 @@ public class ScrollingActivity extends AppCompatActivity {
                     RatingBar.setRating(rating);
                     workerImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
 
-                    db.collection("schedules")
-                            .whereEqualTo("workerID", String.valueOf(workerNum))
+                    db.collection("workers")
+                            .document(String.valueOf(workerNum))
+                            .collection("schedule")
                             .whereEqualTo("booked", false)
                             .get()
                             .addOnCompleteListener(task1 -> {
@@ -226,6 +214,8 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void addCardFirstAvailable(){
+
+        //TODO: This doesn't work anymore with new structure of schedule in the database
 
         db.collection("schedules")
                 .orderBy("slot", Query.Direction.ASCENDING)

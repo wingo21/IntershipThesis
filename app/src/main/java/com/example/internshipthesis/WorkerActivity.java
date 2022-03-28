@@ -1,14 +1,17 @@
 package com.example.internshipthesis;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -21,7 +24,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Date;
 import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
@@ -29,11 +31,12 @@ import static android.content.ContentValues.TAG;
 public class WorkerActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    String user = fAuth.getUid();
     int workerNum;
     String name;
-    Date appointment_slot;
     float rating;
-    Date slot;
+    String slot;
     LinearLayout layout;
 
     //TODO: Add more info to the worker profile (maybe a little description, full schedule, professional info, ecc)
@@ -97,15 +100,24 @@ public class WorkerActivity extends AppCompatActivity {
     }
 
     private void getInfoForAppointments(int workerNum){
-        db.collection("schedules")
-                .whereEqualTo("workerID", String.valueOf(workerNum))
+        db.collection("workers")
+                .document(String.valueOf(workerNum))
+                .collection("schedule")
                 .whereEqualTo("booked", false)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            appointment_slot = (Objects.requireNonNull(document.toObject(Classes.Schedules.class))).getSlot();
-                            addAppointment(appointment_slot);
+
+                            Log.d(TAG, "Document ID: " + document.getId());
+
+                            String documentID = document.getId();
+
+                            Log.d(TAG, "Document ID variable inside getInfoForAppointments: " + documentID);
+
+                            slot = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getSlot();
+                            Log.d(TAG, "String for slot: " + slot);
+                            addAppointment(slot, documentID);
                         }
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
@@ -113,31 +125,46 @@ public class WorkerActivity extends AppCompatActivity {
                 });
     }
 
-    private void addAppointment(Date appointment_date) {
+    private void addAppointment(String slot, String documentID) {
         View appointment = getLayoutInflater().inflate(R.layout.appointment_layout, layout, false);
 
         TextView appointment_slot_textview = appointment.findViewById(R.id.appointment_slot);
         Button bookButton = appointment.findViewById(R.id.bookButton);
 
-        appointment_slot_textview.setText(appointment_date.toString());
+        appointment_slot_textview.setText(slot);
 
         // perform click event on button
         bookButton.setOnClickListener(v -> {
-            openDialog();
+            AlertDialog dialog = new AlertDialog.Builder(WorkerActivity.this)
+                    .setTitle("You are about to book this appointment. Are you sure?")
+                    .setPositiveButton("Confirm", (dialog12, whichButton) -> {
+                        db.collection("workers")
+                                .document(String.valueOf(workerNum))
+                                .collection("schedule")
+                                .document(documentID)
+                                .update("booked", true);
+
+                        db.collection("workers")
+                                .document(String.valueOf(workerNum))
+                                .collection("schedule")
+                                .document(documentID)
+                                .update("bookedby", user);
+
+                        AlertDialog dialog1 = new AlertDialog.Builder(WorkerActivity.this)
+                                .setTitle("You successfully booked your appointment!")
+                                .setNeutralButton("Yay", (dialog2, whichButton1) -> openScrollingActivity())
+                                .create();
+                        dialog1.show();
+                    })
+                    .setNegativeButton("Cancel", null).create();
+            dialog.show();
         });
 
         layout.addView(appointment);
     }
 
-    private void openDialog() {
-        Dialog dialog = new Dialog();
-        dialog.show(getSupportFragmentManager(), "confirm booking dialog");
-        /*removeAppointments();
-        getInfoForAppointments(workerNum);*/
-
-    }
-
-    private void removeAppointments() {
-        layout.removeAllViews();
+    private void openScrollingActivity() {
+        Intent intent = new Intent(this, ScrollingActivity.class);
+        startActivity(intent);
     }
 }

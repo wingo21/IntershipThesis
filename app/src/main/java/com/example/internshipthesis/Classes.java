@@ -33,19 +33,23 @@ public class Classes {
     public static class Worker {
         private String name;
         private float rating;
+        private String slot;
 
         public Worker() {}
 
-        public Worker(String name, float rating) {
+        public Worker(String name, float rating, String slot) {
             this.name = name;
             this.rating = rating;
+            this.slot = slot;
         }
 
         public String getName() {return name;}
         public float getRating() {return rating;}
+        public String getSlot() {return slot;}
 
         public void setName(String name) {this.name = name;}
         public void setRating(float rating) {this.rating = rating;}
+        public void setSlot(String slot) {this.slot = slot;}
     }
 
     public static class Schedules {
