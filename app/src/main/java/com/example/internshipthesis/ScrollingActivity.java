@@ -29,10 +29,13 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
+import static java.time.LocalDate.now;
 
 public class ScrollingActivity extends AppCompatActivity {
 
@@ -41,14 +44,16 @@ public class ScrollingActivity extends AppCompatActivity {
     LinearLayout layout;
     String name;
     float rating;
-    Date slot = new Date(Long.MAX_VALUE);
-    Date slot2;
     FloatingActionButton fab_main;
     ExtendedFloatingActionButton fab_worker;
     ExtendedFloatingActionButton fab_first_available;
     ExtendedFloatingActionButton fab_default_sort;
     String workerID;
     int mode = 0;
+    LocalDate currentDate = now();
+    int currentDay = currentDate.getDayOfWeek().getValue();
+    LocalTime currentTime = LocalTime.now();
+    int currentHour = currentTime.getHour();
 
     Boolean isFABOpen = false;
 
@@ -64,6 +69,8 @@ public class ScrollingActivity extends AppCompatActivity {
         toolBarLayout.setTitle(getTitle());
         layout = findViewById(R.id.thisone);
 
+        Log.d(TAG, "Current day: " + currentDay);
+        Log.d(TAG, "Current hour: " + currentHour);
         addAllCards();
 
         fab_main = findViewById(R.id.fab_main);
