@@ -222,8 +222,6 @@ public class ScrollingActivity extends AppCompatActivity {
 
     private void addCardFirstAvailable(){
 
-        //TODO: This doesn't work anymore with new structure of schedule in the database
-
         if(currentDay == 7){
             currentDay = 1;
         }
