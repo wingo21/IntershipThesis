@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -34,6 +35,7 @@ public class BookingActivity extends AppCompatActivity {
     String workerID;
     String name;
     String slot;
+    String documentID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +46,6 @@ public class BookingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
-
 
         layout = findViewById(R.id.thisonenew);
         getInfoForBookings();
@@ -118,6 +119,7 @@ public class BookingActivity extends AppCompatActivity {
                             .addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
                                     for (QueryDocumentSnapshot document1 : task1.getResult()) {
+                                        documentID = document.getId();
                                         slot = (Objects.requireNonNull(document1.toObject(Classes.Worker.class))).getSlot();
                                         your_appointment.setText(slot);
                                     }
@@ -135,19 +137,31 @@ public class BookingActivity extends AppCompatActivity {
         });
 
         // perform click event on button
-        /*cancelBookingButton.setOnClickListener(v -> {
-            db.collection("workers")
-                    .document(String.valueOf(workerNum))
-                    .collection("schedule")
-                    .document(documentID)
-                    .update("booked", false);
+        cancelBookingButton.setOnClickListener(v -> {
+            AlertDialog dialog = new AlertDialog.Builder(BookingActivity.this)
+                    .setTitle("You are about to cancel this appointment. Are you sure?")
+                    .setPositiveButton("Confirm", (dialog12, whichButton) -> {
+                        db.collection("workers")
+                                .document(String.valueOf(workerNum))
+                                .collection("schedule")
+                                .document(documentID)
+                                .update("booked", false);
 
-            db.collection("workers")
-                    .document(String.valueOf(workerNum))
-                    .collection("schedule")
-                    .document(documentID)
-                    .update("bookedby", "");
-        });*/
+                        db.collection("workers")
+                                .document(String.valueOf(workerNum))
+                                .collection("schedule")
+                                .document(documentID)
+                                .update("bookedby", "");
+
+                        AlertDialog dialog1 = new AlertDialog.Builder(BookingActivity.this)
+                                .setTitle("You successfully cancelled your appointment")
+                                .setNeutralButton("Ok", (dialog2, whichButton1) -> openScrollingActivity())
+                                .create();
+                        dialog1.show();
+                    })
+                    .setNegativeButton("Cancel", null).create();
+            dialog.show();
+        });
 
         booking.setOnClickListener(view -> openWorkerActivity(workerNum));
 
@@ -157,6 +171,11 @@ public class BookingActivity extends AppCompatActivity {
     private void openWorkerActivity(int workerNum) {
         Intent intent = new Intent(this, WorkerActivity.class);
         intent.putExtra("key",workerNum);
+        startActivity(intent);
+    }
+
+    private void openScrollingActivity() {
+        Intent intent = new Intent(this, ScrollingActivity.class);
         startActivity(intent);
     }
 }
