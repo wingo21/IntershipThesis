@@ -224,8 +224,14 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //TODO: This doesn't work anymore with new structure of schedule in the database
 
+        if(currentDay == 7){
+            currentDay = 1;
+        }
+
         db.collection("schedules")
-                .orderBy("slot", Query.Direction.ASCENDING)
+                .document(String.valueOf(currentDay))
+                .collection("appointments")
+                .orderBy("hour", Query.Direction.ASCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
