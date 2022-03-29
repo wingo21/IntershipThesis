@@ -138,6 +138,10 @@ public class BookingActivity extends AppCompatActivity {
 
         // perform click event on button
         cancelBookingButton.setOnClickListener(v -> {
+            //TODO Bug: if the user books multiple appointments from the same worker,
+            // all the time slots will have the same value and the button that cancels the appointment
+            // will only cancel one card, leaving the others with a wrong booking information
+            // and unable to be cancelled
             AlertDialog dialog = new AlertDialog.Builder(BookingActivity.this)
                     .setTitle("You are about to cancel this appointment. Are you sure?")
                     .setPositiveButton("Confirm", (dialog12, whichButton) -> {
