@@ -33,7 +33,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:padding="10dp"
             android:text="@string/Text1_Card"
             android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/workerImage"

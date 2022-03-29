@@ -30,10 +30,10 @@ public class BookingActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     String user = Objects.requireNonNull(fAuth.getCurrentUser()).getUid();
-    String email = Objects.requireNonNull(fAuth.getCurrentUser()).getEmail();
     LinearLayout layout;
     String workerID;
     String name;
+    String slot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +47,11 @@ public class BookingActivity extends AppCompatActivity {
 
 
         layout = findViewById(R.id.thisonenew);
-        addAllBookings();
+        getInfoForBookings();
 
     }
 
-    private void addAllBookings() {
+    private void getInfoForBookings() {
 
         db.collection("workers")
                 .get()
@@ -59,13 +59,32 @@ public class BookingActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             workerID = document.getId();
-                            addBooked(Integer.parseInt(workerID));
+                            addAllBookings(Integer.parseInt(workerID));
                         }
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
 
+    }
+
+    private void addAllBookings(int workerNum){
+
+        db.collection("workers")
+                .document(String.valueOf(workerNum))
+                .collection("schedule")
+                .whereEqualTo("booked", true)
+                .whereEqualTo("bookedby", user)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            addBooked(workerNum);
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
     }
 
     @SuppressLint("SetTextI18n")
@@ -94,14 +113,16 @@ public class BookingActivity extends AppCompatActivity {
                             .document(String.valueOf(workerNum))
                             .collection("schedule")
                             .whereEqualTo("booked", true)
+                            .whereEqualTo("bookedby", user)
                             .get()
                             .addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
                                     for (QueryDocumentSnapshot document1 : task1.getResult()) {
-                                        your_appointment.setText("Currently available. Click to see when");
+                                        slot = (Objects.requireNonNull(document1.toObject(Classes.Worker.class))).getSlot();
+                                        your_appointment.setText(slot);
                                     }
                                 } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                    Log.d(TAG, "Error getting documents: ", task1.getException());
                                 }
                             });
 
