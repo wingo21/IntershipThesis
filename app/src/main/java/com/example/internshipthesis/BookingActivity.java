@@ -119,7 +119,8 @@ public class BookingActivity extends AppCompatActivity {
                             .addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
                                     for (QueryDocumentSnapshot document1 : task1.getResult()) {
-                                        documentID = document.getId();
+                                        documentID = document1.getId();
+                                        Log.d(TAG, "BOOKING Current document: " + documentID);
                                         slot = (Objects.requireNonNull(document1.toObject(Classes.Worker.class))).getSlot();
                                         your_appointment.setText(slot);
                                     }
@@ -142,6 +143,8 @@ public class BookingActivity extends AppCompatActivity {
             // all the time slots will have the same value and the button that cancels the appointment
             // will only cancel one card, leaving the others with a wrong booking information
             // and unable to be cancelled
+            Log.d(TAG, "BUTTON This button belongs to: " + name);
+            Log.d(TAG, "BUTTON Current document: " + documentID);
             AlertDialog dialog = new AlertDialog.Builder(BookingActivity.this)
                     .setTitle("You are about to cancel this appointment. Are you sure?")
                     .setPositiveButton("Confirm", (dialog12, whichButton) -> {
