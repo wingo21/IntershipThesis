@@ -31,7 +31,6 @@ import android.widget.Toast;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
@@ -230,6 +229,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 .document(String.valueOf(currentDay))
                 .collection("appointments")
                 .orderBy("hour", Query.Direction.ASCENDING)
+                .whereGreaterThan("hour", currentHour)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

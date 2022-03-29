@@ -24,9 +24,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
+import static java.time.LocalDate.now;
 
 public class WorkerActivity extends AppCompatActivity {
 
@@ -38,6 +41,10 @@ public class WorkerActivity extends AppCompatActivity {
     float rating;
     String slot;
     LinearLayout layout;
+    LocalDate currentDate = now();
+    int currentDay = currentDate.getDayOfWeek().getValue();
+    LocalTime currentTime = LocalTime.now();
+    int currentHour = currentTime.getHour();
 
     //TODO: Add more info to the worker profile (maybe a little description, full schedule, professional info, ecc)
 
@@ -108,16 +115,19 @@ public class WorkerActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-
-                            Log.d(TAG, "Document ID: " + document.getId());
-
                             String documentID = document.getId();
-
-                            Log.d(TAG, "Document ID variable inside getInfoForAppointments: " + documentID);
-
                             slot = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getSlot();
-                            Log.d(TAG, "String for slot: " + slot);
-                            addAppointment(slot, documentID);
+                            String nowDay = document.getString("day");
+                            String nowHour = document.getString("hour");
+                            if(Integer.parseInt(Objects.requireNonNull(nowDay)) == currentDay){
+                                if(Integer.parseInt(Objects.requireNonNull(nowHour)) > currentHour){
+                                    addAppointment(slot, documentID);
+                                }
+                            }
+                            if(Integer.parseInt(Objects.requireNonNull(nowDay)) > currentDay) {
+                                addAppointment(slot, documentID);
+                            }
+
                         }
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
