@@ -56,5 +56,9 @@
     <string name="user_car">User car</string>
     <string name="booking_button">book</string>
     <string name="appointment_slot">appointment_slot</string>
+    <string name="appointment">Your booked appointment:</string>
+    <string name="cancel_booking_button">cancel booking</string>
+    <string name="see_bookings">check your appointments</string>
+    <string name="title_activity_bookings">Your appointments</string>
 
 </resources>

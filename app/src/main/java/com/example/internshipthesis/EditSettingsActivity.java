@@ -59,8 +59,6 @@ public class EditSettingsActivity extends AppCompatActivity {
 
         super.onStart();
 
-        //TODO: STILL DOESN'T ACTUALLY WORK
-
         // Sezione per il settaggio del pulsante saveEmailButton
         saveEmailButton.setOnClickListener(v -> {
             final String e = Objects.requireNonNull(inputEmail.getEditText()).getText().toString().trim();

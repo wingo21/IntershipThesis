@@ -44,6 +44,10 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/Theme.InternshipThesis.NoActionBar" />
+        <activity
+            android:name=".BookingActivity"
+            android:label="@string/title_activity_bookings"
+            android:theme="@style/Theme.InternshipThesis.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.gms.car.application"
