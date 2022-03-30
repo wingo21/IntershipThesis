@@ -70,6 +70,8 @@ public class ScrollingActivity extends AppCompatActivity {
 
         Log.d(TAG, "Current day: " + currentDay);
         Log.d(TAG, "Current hour: " + currentHour);
+
+        deleteOldAppointments();
         addAllCards();
 
         fab_main = findViewById(R.id.fab_main);
@@ -114,6 +116,61 @@ public class ScrollingActivity extends AppCompatActivity {
             }
             closeFABMenu();
         });
+    }
+
+    private void deleteOldAppointments() {
+        db.collection("workers")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            workerID = document.getId();
+                            db.collection("workers")
+                                    .document(workerID)
+                                    .collection("schedule")
+                                    .get()
+                                    .addOnCompleteListener(task1 -> {
+                                        if(task1.isSuccessful()){
+                                            for (QueryDocumentSnapshot document1 : task1.getResult()) {
+                                                String documentID = document1.getId();
+                                                int day = Integer.parseInt(Objects.requireNonNull(document1.getString("day")));
+                                                int hour = Integer.parseInt(Objects.requireNonNull(document1.getString("hour")));
+                                                if(day < currentDay){
+                                                    db.collection("workers")
+                                                            .document(String.valueOf(workerID))
+                                                            .collection("schedule")
+                                                            .document(documentID)
+                                                            .update("booked", false);
+
+                                                    db.collection("workers")
+                                                            .document(String.valueOf(workerID))
+                                                            .collection("schedule")
+                                                            .document(documentID)
+                                                            .update("bookedby", "");
+                                                }
+                                                if(day == currentDay){
+                                                    if(hour <= currentHour){
+                                                        db.collection("workers")
+                                                                .document(String.valueOf(workerID))
+                                                                .collection("schedule")
+                                                                .document(documentID)
+                                                                .update("booked", false);
+
+                                                        db.collection("workers")
+                                                                .document(String.valueOf(workerID))
+                                                                .collection("schedule")
+                                                                .document(documentID)
+                                                                .update("bookedby", "");
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
     }
 
     private void removeCards() {

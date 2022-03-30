@@ -50,6 +50,7 @@ public class WorkerActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -107,6 +108,7 @@ public class WorkerActivity extends AppCompatActivity {
     }
 
     private void getInfoForAppointments(int workerNum){
+
         db.collection("workers")
                 .document(String.valueOf(workerNum))
                 .collection("schedule")
@@ -136,6 +138,7 @@ public class WorkerActivity extends AppCompatActivity {
     }
 
     private void addAppointment(String slot, String documentID) {
+
         View appointment = getLayoutInflater().inflate(R.layout.appointment_layout, layout, false);
 
         TextView appointment_slot_textview = appointment.findViewById(R.id.appointment_slot);
@@ -151,20 +154,61 @@ public class WorkerActivity extends AppCompatActivity {
                         db.collection("workers")
                                 .document(String.valueOf(workerNum))
                                 .collection("schedule")
-                                .document(documentID)
-                                .update("booked", true);
+                                .get()
+                                .addOnCompleteListener(task -> {
+                                    if(task.isSuccessful()){
+                                        boolean found = false;
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            String bookedby = document.getString("bookedby");
+                                            if(Objects.requireNonNull(bookedby).equals(user)){
+                                                found = true;
+                                                AlertDialog dialog2 = new AlertDialog.Builder(WorkerActivity.this)
+                                                        .setTitle("Cannot book appointment")
+                                                        .setMessage("You have already a booked appointment with this operator, please cancel to book a different appointment")
+                                                        .setNeutralButton("ok", null).create();
+                                                dialog2.show();
+                                            }
+                                        }
 
-                        db.collection("workers")
+                                        if(!found){
+                                            db.collection("workers")
+                                                    .document(String.valueOf(workerNum))
+                                                    .collection("schedule")
+                                                    .document(documentID)
+                                                    .update("booked", true);
+
+                                            db.collection("workers")
+                                                    .document(String.valueOf(workerNum))
+                                                    .collection("schedule")
+                                                    .document(documentID)
+                                                    .update("bookedby", user);
+
+                                            AlertDialog dialog1 = new AlertDialog.Builder(WorkerActivity.this)
+                                                    .setTitle("You successfully booked your appointment!")
+                                                    .setNeutralButton("Yay", (dialog2, whichButton1) -> openScrollingActivity())
+                                                    .create();
+                                            dialog1.show();
+                                        }
+                                    }
+                                });
+
+                        /*db.collection("workers")
                                 .document(String.valueOf(workerNum))
                                 .collection("schedule")
                                 .document(documentID)
-                                .update("bookedby", user);
+                                .update("booked", true);*/
 
-                        AlertDialog dialog1 = new AlertDialog.Builder(WorkerActivity.this)
+                        /*db.collection("workers")
+                                .document(String.valueOf(workerNum))
+                                .collection("schedule")
+                                .document(documentID)
+                                .update("bookedby", user);*/
+
+                        /*AlertDialog dialog1 = new AlertDialog.Builder(WorkerActivity.this)
                                 .setTitle("You successfully booked your appointment!")
                                 .setNeutralButton("Yay", (dialog2, whichButton1) -> openScrollingActivity())
                                 .create();
-                        dialog1.show();
+                        dialog1.show();*/
                     })
                     .setNegativeButton("Cancel", null).create();
             dialog.show();
