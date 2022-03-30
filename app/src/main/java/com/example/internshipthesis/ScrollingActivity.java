@@ -71,7 +71,7 @@ public class ScrollingActivity extends AppCompatActivity {
         Log.d(TAG, "Current day: " + currentDay);
         Log.d(TAG, "Current hour: " + currentHour);
 
-        deleteOldAppointments();
+        deleteOldAppointmentsStart();
         addAllCards();
 
         fab_main = findViewById(R.id.fab_main);
@@ -118,7 +118,7 @@ public class ScrollingActivity extends AppCompatActivity {
         });
     }
 
-    private void deleteOldAppointments() {
+    private void deleteOldAppointmentsStart() {
         //TODO This doesn't work
         db.collection("workers")
                 .get()
@@ -127,62 +127,67 @@ public class ScrollingActivity extends AppCompatActivity {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             workerID = document.getId();
                             Log.d(TAG, "DELETE current worker document: " + workerID);
-                            db.collection("workers")
-                                    .document(workerID)
-                                    .collection("schedule")
-                                    .get()
-                                    .addOnCompleteListener(task1 -> {
-                                        if(task1.isSuccessful()){
-                                            for (QueryDocumentSnapshot document1 : task1.getResult()) {
-                                                String documentID = document1.getId();
-                                                Log.d(TAG, "DELETE current schedule day: " + documentID);
-                                                int day = Integer.parseInt(Objects.requireNonNull(document1.getString("day")));
-                                                int hour = Integer.parseInt(Objects.requireNonNull(document1.getString("hour")));
-                                                Log.d(TAG, "DELETE current day: " + day);
-                                                Log.d(TAG, "DELETE current hour: " + hour);
-                                                if(day < currentDay){
-                                                    Log.d(TAG, "DELETE day " + day
-                                                            + " is lower than currentDay " + currentDay
-                                                            + " so this should be updated");
-                                                    Log.d(TAG, "current document that i'm about to change" + documentID);
-                                                    db.collection("workers")
-                                                            .document(String.valueOf(workerID))
-                                                            .collection("schedule")
-                                                            .document(documentID)
-                                                            .update("booked", false);
-
-                                                    db.collection("workers")
-                                                            .document(String.valueOf(workerID))
-                                                            .collection("schedule")
-                                                            .document(documentID)
-                                                            .update("bookedby", "");
-                                                }
-                                                if(day == currentDay){
-                                                    if(hour <= currentHour){
-                                                        Log.d(TAG, "DELETE day " + day
-                                                                + " is equal to currentDay " + currentDay
-                                                                + " but hour " + hour
-                                                                + " is lower or equal currentHour " + currentHour
-                                                                + " so this should be updated ");
-                                                        db.collection("workers")
-                                                                .document(String.valueOf(workerID))
-                                                                .collection("schedule")
-                                                                .document(documentID)
-                                                                .update("booked", false);
-
-                                                        db.collection("workers")
-                                                                .document(String.valueOf(workerID))
-                                                                .collection("schedule")
-                                                                .document(documentID)
-                                                                .update("bookedby", "");
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    });
+                            deleteOldAppointments(workerID);
                         }
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+    }
+
+    private void deleteOldAppointments(String workerID){
+
+        db.collection("workers")
+                .document(workerID)
+                .collection("schedule")
+                .get()
+                .addOnCompleteListener(task1 -> {
+                    if(task1.isSuccessful()){
+                        for (QueryDocumentSnapshot document1 : task1.getResult()) {
+                            String documentID = document1.getId();
+                            Log.d(TAG, "DELETE current schedule day: " + documentID);
+                            int day = Integer.parseInt(Objects.requireNonNull(document1.getString("day")));
+                            int hour = Integer.parseInt(Objects.requireNonNull(document1.getString("hour")));
+                            Log.d(TAG, "DELETE current day: " + day);
+                            Log.d(TAG, "DELETE current hour: " + hour);
+                            if(day < currentDay){
+                                Log.d(TAG, "DELETE day " + day
+                                        + " is lower than currentDay " + currentDay
+                                        + " so this should be updated");
+                                Log.d(TAG, "current document that i'm about to change" + documentID);
+                                db.collection("workers")
+                                        .document(workerID)
+                                        .collection("schedule")
+                                        .document(documentID)
+                                        .update("booked", false);
+
+                                db.collection("workers")
+                                        .document(workerID)
+                                        .collection("schedule")
+                                        .document(documentID)
+                                        .update("bookedby", "");
+                            }
+                            if(day == currentDay){
+                                if(hour <= currentHour){
+                                    Log.d(TAG, "DELETE day " + day
+                                            + " is equal to currentDay " + currentDay
+                                            + " but hour " + hour
+                                            + " is lower or equal currentHour " + currentHour
+                                            + " so this should be updated ");
+                                    db.collection("workers")
+                                            .document(workerID)
+                                            .collection("schedule")
+                                            .document(documentID)
+                                            .update("booked", false);
+
+                                    db.collection("workers")
+                                            .document(workerID)
+                                            .collection("schedule")
+                                            .document(documentID)
+                                            .update("bookedby", "");
+                                }
+                            }
+                        }
                     }
                 });
     }
