@@ -153,7 +153,16 @@ public class ScrollingActivity extends AppCompatActivity {
                             .addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
                                     for (QueryDocumentSnapshot document1 : task1.getResult()) {
-                                        first_available_slot.setText("Currently available. Click to see when");
+                                        int day = Integer.parseInt(Objects.requireNonNull(document1.getString("day")));
+                                        int hour = Integer.parseInt(Objects.requireNonNull(document1.getString("hour")));
+                                        if(day > currentDay){
+                                            first_available_slot.setText("Currently available. Click to see when");
+                                        }
+                                        if(day == currentDay){
+                                            if(hour > currentHour){
+                                                first_available_slot.setText("Currently available. Click to see when");
+                                            }
+                                        }
                                     }
                                 } else {
                                     Log.d(TAG, "Error getting documents: ", task.getException());
