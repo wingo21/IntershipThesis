@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -57,6 +58,8 @@ public class WorkerActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -185,30 +188,12 @@ public class WorkerActivity extends AppCompatActivity {
 
                                             AlertDialog dialog1 = new AlertDialog.Builder(WorkerActivity.this)
                                                     .setTitle("You successfully booked your appointment!")
-                                                    .setNeutralButton("Yay", (dialog2, whichButton1) -> openScrollingActivity())
+                                                    .setNeutralButton("Yay", (dialog2, whichButton1) -> finish())
                                                     .create();
                                             dialog1.show();
                                         }
                                     }
                                 });
-
-                        /*db.collection("workers")
-                                .document(String.valueOf(workerNum))
-                                .collection("schedule")
-                                .document(documentID)
-                                .update("booked", true);*/
-
-                        /*db.collection("workers")
-                                .document(String.valueOf(workerNum))
-                                .collection("schedule")
-                                .document(documentID)
-                                .update("bookedby", user);*/
-
-                        /*AlertDialog dialog1 = new AlertDialog.Builder(WorkerActivity.this)
-                                .setTitle("You successfully booked your appointment!")
-                                .setNeutralButton("Yay", (dialog2, whichButton1) -> openScrollingActivity())
-                                .create();
-                        dialog1.show();*/
                     })
                     .setNegativeButton("Cancel", null).create();
             dialog.show();
@@ -217,8 +202,13 @@ public class WorkerActivity extends AppCompatActivity {
         layout.addView(appointment);
     }
 
-    private void openScrollingActivity() {
-        Intent intent = new Intent(this, ScrollingActivity.class);
-        startActivity(intent);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

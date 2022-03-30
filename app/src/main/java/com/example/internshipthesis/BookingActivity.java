@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -46,6 +47,10 @@ public class BookingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
 
         layout = findViewById(R.id.thisonenew);
         getInfoForBookings();
@@ -162,7 +167,7 @@ public class BookingActivity extends AppCompatActivity {
 
                         AlertDialog dialog1 = new AlertDialog.Builder(BookingActivity.this)
                                 .setTitle("You successfully cancelled your appointment")
-                                .setNeutralButton("Ok", (dialog2, whichButton1) -> openSettingsActivity())
+                                .setNeutralButton("Ok", (dialog2, whichButton1) -> finish())
                                 .create();
                         dialog1.show();
                     })
@@ -181,8 +186,13 @@ public class BookingActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void openSettingsActivity() {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
