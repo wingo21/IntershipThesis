@@ -74,7 +74,7 @@ public class WorkerActivity extends AppCompatActivity {
         Button submitButton = findViewById(R.id.submitButton);
         ImageView workerImage = findViewById(R.id.workerImage);
         layout = findViewById(R.id.workerone);
-        String workerImgSrc = "worker"+ workerNum; //  this is image file name
+        String workerImgSrc = "worker" + workerNum; //  this is image file name
         String PACKAGE_NAME = getApplicationContext().getPackageName();
         int imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+workerImgSrc , null, null);
 

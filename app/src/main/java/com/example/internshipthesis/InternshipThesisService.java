@@ -9,6 +9,7 @@ import androidx.car.app.Session;
 import androidx.car.app.validation.HostValidator;
 
 public class InternshipThesisService extends CarAppService {
+    
     @NonNull
     @Override
     public HostValidator createHostValidator() {
@@ -18,6 +19,7 @@ public class InternshipThesisService extends CarAppService {
     @NonNull
     @Override
     public Session onCreateSession() {
+
         return new Session(){
             @NonNull
             @Override
