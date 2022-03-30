@@ -162,7 +162,7 @@ public class BookingActivity extends AppCompatActivity {
 
                         AlertDialog dialog1 = new AlertDialog.Builder(BookingActivity.this)
                                 .setTitle("You successfully cancelled your appointment")
-                                .setNeutralButton("Ok", (dialog2, whichButton1) -> openScrollingActivity())
+                                .setNeutralButton("Ok", (dialog2, whichButton1) -> openSettingsActivity())
                                 .create();
                         dialog1.show();
                     })
@@ -181,8 +181,8 @@ public class BookingActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void openScrollingActivity() {
-        Intent intent = new Intent(this, ScrollingActivity.class);
+    private void openSettingsActivity() {
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 }
