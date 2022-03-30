@@ -35,7 +35,6 @@ public class EditSettingsActivity extends AppCompatActivity {
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseUser user = fAuth.getCurrentUser();
     String email = Objects.requireNonNull(fAuth.getCurrentUser()).getEmail();
-    String id = "null";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +47,6 @@ public class EditSettingsActivity extends AppCompatActivity {
         toolBarLayout.setTitle(getTitle());
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-
 
         saveEmailButton = findViewById(R.id.saveEmailButton);
         savePasswordButton = findViewById(R.id.savePasswordButton);
@@ -66,11 +63,14 @@ public class EditSettingsActivity extends AppCompatActivity {
 
         // Sezione per il settaggio del pulsante saveEmailButton
         saveEmailButton.setOnClickListener(v -> {
+
             final String e = Objects.requireNonNull(inputEmail.getEditText()).getText().toString().trim();
             if (e.equals("")) {
+
                 Toast.makeText(getApplicationContext(), "Field cannot be empty", Toast.LENGTH_SHORT).show();
             }
             else if (!isValidEmail(e)) {
+
                 Toast.makeText(getApplicationContext(), "Email invalid", Toast.LENGTH_SHORT).show();
             }
             else {
@@ -82,17 +82,21 @@ public class EditSettingsActivity extends AppCompatActivity {
                         .whereEqualTo("email", email)
                         .get()
                         .addOnCompleteListener(task -> {
+
                             if (task.isSuccessful() && !task.getResult().isEmpty()) {
+
                                 DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                                 String documentID = documentSnapshot.getId();
                                 user.updateEmail(e).addOnSuccessListener(aVoid -> {
+
                                     DocumentReference documentReference = db.collection("users").document(documentID);
                                     documentReference.update(newEmail);
                                     Toast.makeText(EditSettingsActivity.this, "Email successfully updated", Toast.LENGTH_SHORT).show();
-                                    openScrollingActivity();
+                                    finish();
                                 }).addOnFailureListener(e1 ->
                                         Toast.makeText(EditSettingsActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show());
                             } else {
+
                                 Log.d("TAGERROR", "ERRORE");
                             }
                         });
@@ -101,18 +105,23 @@ public class EditSettingsActivity extends AppCompatActivity {
 
         // Sezione per il settaggio del pulsante savePasswordButton
         savePasswordButton.setOnClickListener(v -> {
+
             final String ip = Objects.requireNonNull(inputPassword.getEditText()).getText().toString().trim();
             final String cp = Objects.requireNonNull(confirmPassword.getEditText()).getText().toString().trim();
             if (ip.equals("")) {
+
                 Toast.makeText(getApplicationContext(), "Field cannot be empty", Toast.LENGTH_SHORT).show();
             }
             else if (!ip.equals(cp)) {
+
                 Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
             }
             else if (ip.length() < 8) {
+
                 Toast.makeText(getApplicationContext(), "Password must be at least 8 characters long", Toast.LENGTH_SHORT).show();
             }
             else {
+
                 Map<String,Object> newPassword = new HashMap<>();
                 newPassword.put("password", ip);
 
@@ -120,17 +129,21 @@ public class EditSettingsActivity extends AppCompatActivity {
                         .whereEqualTo("email", email)
                         .get()
                         .addOnCompleteListener(task -> {
+
                             if (task.isSuccessful() && !task.getResult().isEmpty()) {
+
                                 DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                                 String documentID = documentSnapshot.getId();
                                 user.updatePassword(ip).addOnSuccessListener(aVoid -> {
+
                                     DocumentReference documentReference = db.collection("users").document(documentID);
                                     documentReference.update(newPassword);
                                     Toast.makeText(EditSettingsActivity.this, "Password successfully updated", Toast.LENGTH_SHORT).show();
-                                    openScrollingActivity();
+                                    finish();
                                 }).addOnFailureListener(e1 ->
                                         Toast.makeText(EditSettingsActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show());
                             } else {
+
                                 Log.d("TAGERROR", "ERRORE");
                             }
                         });
@@ -140,19 +153,15 @@ public class EditSettingsActivity extends AppCompatActivity {
 
     // Metodo per controllare se l'email inserita ha pattern accettabile
     public static boolean isValidEmail(CharSequence target) {
+
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
-    }
-
-    private void openScrollingActivity() {
-
-        Intent intent = new Intent(this, ScrollingActivity.class);
-        startActivity(intent);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
+
             finish(); // close this activity and return to preview activity (if there is any)
         }
 

@@ -13,7 +13,6 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
@@ -25,7 +24,6 @@ public class LoginActivity extends AppCompatActivity {
     Button login, signup;
     TextInputLayout email_field, password_field;
     ProgressBar progressBar;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
 
     @Override
@@ -51,17 +49,21 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
 
         if(fAuth.getCurrentUser() != null) {
+
             openScrollingActivity();
         }
 
         login.setOnClickListener(view ->
                 fAuth.signInWithEmailAndPassword(Objects.requireNonNull(email_field.getEditText()).getText().toString().trim(), Objects.requireNonNull(password_field.getEditText()).getText().toString().trim())
                         .addOnCompleteListener(task -> {
+
                             if(task.isSuccessful()) {
+
                                 Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.VISIBLE);
                                 openScrollingActivity();
                             }else{
+
                                 Toast.makeText(LoginActivity.this, "Error!" + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                             }
         }));

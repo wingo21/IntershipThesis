@@ -49,9 +49,6 @@ public class BookingActivity extends AppCompatActivity {
         toolBarLayout.setTitle(getTitle());
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-
-
         layout = findViewById(R.id.thisonenew);
         getInfoForBookings();
 
@@ -62,12 +59,16 @@ public class BookingActivity extends AppCompatActivity {
         db.collection("workers")
                 .get()
                 .addOnCompleteListener(task -> {
+
                     if (task.isSuccessful()) {
+
                         for (QueryDocumentSnapshot document : task.getResult()) {
+
                             workerID = document.getId();
                             addAllBookings(Integer.parseInt(workerID));
                         }
                     } else {
+
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
@@ -83,11 +84,15 @@ public class BookingActivity extends AppCompatActivity {
                 .whereEqualTo("bookedby", user)
                 .get()
                 .addOnCompleteListener(task -> {
+
                     if (task.isSuccessful()) {
+
                         for (QueryDocumentSnapshot document : task.getResult()) {
+
                             addBooked(workerNum);
                         }
                     } else {
+
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
@@ -95,8 +100,8 @@ public class BookingActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void addBooked(int workerNum) {
-        View booking = getLayoutInflater().inflate(R.layout.booking_layout, layout, false);
 
+        View booking = getLayoutInflater().inflate(R.layout.booking_layout, layout, false);
         TextView nameWorker = booking.findViewById(R.id.nameWorker);
         Button cancelBookingButton = booking.findViewById(R.id.cancel_booking_Button);
         ImageView workerImage = booking.findViewById(R.id.workerImage);
@@ -107,9 +112,12 @@ public class BookingActivity extends AppCompatActivity {
 
         DocumentReference docRef = db.collection("workers").document(String.valueOf(workerNum));
         docRef.get().addOnCompleteListener(task -> {
+
             if (task.isSuccessful()) {
+
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
+
                     Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     name = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getName();
                     nameWorker.setText(name);
@@ -122,28 +130,35 @@ public class BookingActivity extends AppCompatActivity {
                             .whereEqualTo("bookedby", user)
                             .get()
                             .addOnCompleteListener(task1 -> {
+
                                 if (task1.isSuccessful()) {
+
                                     for (QueryDocumentSnapshot document1 : task1.getResult()) {
+
                                         documentID = document1.getId();
                                         Log.d(TAG, "BOOKING Current document: " + documentID);
                                         slot = (Objects.requireNonNull(document1.toObject(Classes.Worker.class))).getSlot();
                                         your_appointment.setText(slot);
                                     }
                                 } else {
+
                                     Log.d(TAG, "Error getting documents: ", task1.getException());
                                 }
                             });
 
                 } else {
+
                     Log.d(TAG, "No such document");
                 }
             } else {
+
                 Log.d(TAG, "get failed with ", task.getException());
             }
         });
 
         // perform click event on button
         cancelBookingButton.setOnClickListener(v -> {
+
             //TODO Bug: if the user books multiple appointments from the same worker,
             // all the time slots will have the same value and the button that cancels the appointment
             // will only cancel one card, leaving the others with a wrong booking information
@@ -153,6 +168,7 @@ public class BookingActivity extends AppCompatActivity {
             AlertDialog dialog = new AlertDialog.Builder(BookingActivity.this)
                     .setTitle("You are about to cancel this appointment. Are you sure?")
                     .setPositiveButton("Confirm", (dialog12, whichButton) -> {
+
                         db.collection("workers")
                                 .document(String.valueOf(workerNum))
                                 .collection("schedule")
@@ -176,11 +192,11 @@ public class BookingActivity extends AppCompatActivity {
         });
 
         booking.setOnClickListener(view -> openWorkerActivity(workerNum));
-
         layout.addView(booking);
     }
 
     private void openWorkerActivity(int workerNum) {
+
         Intent intent = new Intent(this, WorkerActivity.class);
         intent.putExtra("key",workerNum);
         startActivity(intent);
@@ -188,8 +204,10 @@ public class BookingActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
+
             finish(); // close this activity and return to preview activity (if there is any)
         }
 

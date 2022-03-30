@@ -9,6 +9,7 @@ public class Classes {
 
     /** CLASSE PER LA GESTIONE DEGLI UTENTI */
     public static class User {
+
         private String username;
         private String email;
         private String password;
@@ -16,6 +17,7 @@ public class Classes {
         public User() {}
 
         public User(String username, String email, String password) {
+
             this.username = username;
             this.email = email;
             this.password = password;
@@ -31,6 +33,7 @@ public class Classes {
     }
 
     public static class Worker {
+
         private String name;
         private float rating;
         private String slot;
@@ -38,6 +41,7 @@ public class Classes {
         public Worker() {}
 
         public Worker(String name, float rating, String slot) {
+
             this.name = name;
             this.rating = rating;
             this.slot = slot;
@@ -53,6 +57,7 @@ public class Classes {
     }
 
     public static class Schedules {
+
         private String workerID;
         private Date slot;
 

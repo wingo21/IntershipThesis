@@ -1,6 +1,5 @@
 package com.example.internshipthesis;
 
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
@@ -47,7 +46,8 @@ public class WorkerActivity extends AppCompatActivity {
     LocalTime currentTime = LocalTime.now();
     int currentHour = currentTime.getHour();
 
-    //TODO: Add more info to the worker profile (maybe a little description, full schedule, professional info, ecc)
+    //TODO: Add more info to the worker profile
+    // (maybe a little description, full schedule, professional info, ecc)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,9 @@ public class WorkerActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Bundle extras = getIntent().getExtras();
+
         if (extras != null) {
+
             workerNum = extras.getInt("key");
             //The key argument here must match that used in the other activity
         }
@@ -78,9 +80,12 @@ public class WorkerActivity extends AppCompatActivity {
 
         DocumentReference docRef = db.collection("workers").document(String.valueOf(workerNum));
         docRef.get().addOnCompleteListener(task -> {
+
             if (task.isSuccessful()) {
+
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
+
                     Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     name = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getName();
                     nameWorker.setText(name);
@@ -89,15 +94,18 @@ public class WorkerActivity extends AppCompatActivity {
                     workerImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
 
                 } else {
+
                     Log.d(TAG, "No such document");
                 }
             } else {
+
                 Log.d(TAG, "get failed with ", task.getException());
             }
         });
 
         // perform click event on button
         submitButton.setOnClickListener(v -> {
+
             DocumentReference changerating = db.collection("workers").document(String.valueOf(workerNum));
             changerating.update("rating", RatingBar.getRating()).addOnSuccessListener(aVoid ->
                     Log.d(TAG, "DocumentSnapshot successfully updated!"))
@@ -118,23 +126,32 @@ public class WorkerActivity extends AppCompatActivity {
                 .whereEqualTo("booked", false)
                 .get()
                 .addOnCompleteListener(task -> {
+
                     if (task.isSuccessful()) {
+
                         for (QueryDocumentSnapshot document : task.getResult()) {
+
                             String documentID = document.getId();
                             slot = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getSlot();
                             String nowDay = document.getString("day");
                             String nowHour = document.getString("hour");
+
                             if(Integer.parseInt(Objects.requireNonNull(nowDay)) == currentDay){
+
                                 if(Integer.parseInt(Objects.requireNonNull(nowHour)) > currentHour){
+
                                     addAppointment(slot, documentID);
                                 }
                             }
+
                             if(Integer.parseInt(Objects.requireNonNull(nowDay)) > currentDay) {
+
                                 addAppointment(slot, documentID);
                             }
 
                         }
                     } else {
+
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
@@ -143,37 +160,43 @@ public class WorkerActivity extends AppCompatActivity {
     private void addAppointment(String slot, String documentID) {
 
         View appointment = getLayoutInflater().inflate(R.layout.appointment_layout, layout, false);
-
         TextView appointment_slot_textview = appointment.findViewById(R.id.appointment_slot);
         Button bookButton = appointment.findViewById(R.id.bookButton);
-
         appointment_slot_textview.setText(slot);
 
         // perform click event on button
         bookButton.setOnClickListener(v -> {
+
             AlertDialog dialog = new AlertDialog.Builder(WorkerActivity.this)
                     .setTitle("You are about to book this appointment. Are you sure?")
                     .setPositiveButton("Confirm", (dialog12, whichButton) -> {
+
                         db.collection("workers")
                                 .document(String.valueOf(workerNum))
                                 .collection("schedule")
                                 .get()
                                 .addOnCompleteListener(task -> {
+
                                     if(task.isSuccessful()){
+
                                         boolean found = false;
                                         for (QueryDocumentSnapshot document : task.getResult()) {
+
                                             String bookedby = document.getString("bookedby");
                                             if(Objects.requireNonNull(bookedby).equals(user)){
+
                                                 found = true;
                                                 AlertDialog dialog2 = new AlertDialog.Builder(WorkerActivity.this)
                                                         .setTitle("Cannot book appointment")
-                                                        .setMessage("You have already a booked appointment with this operator, please cancel to book a different appointment")
+                                                        .setMessage("You have already a booked appointment with this operator," +
+                                                                " please cancel to book a different appointment")
                                                         .setNeutralButton("ok", null).create();
                                                 dialog2.show();
                                             }
                                         }
 
                                         if(!found){
+
                                             db.collection("workers")
                                                     .document(String.valueOf(workerNum))
                                                     .collection("schedule")
@@ -204,8 +227,10 @@ public class WorkerActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
+
             finish(); // close this activity and return to preview activity (if there is any)
         }
 

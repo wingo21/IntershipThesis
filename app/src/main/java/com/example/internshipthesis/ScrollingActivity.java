@@ -53,7 +53,6 @@ public class ScrollingActivity extends AppCompatActivity {
     int currentDay = currentDate.getDayOfWeek().getValue();
     LocalTime currentTime = LocalTime.now();
     int currentHour = currentTime.getHour();
-
     Boolean isFABOpen = false;
 
     @Override
@@ -83,15 +82,20 @@ public class ScrollingActivity extends AppCompatActivity {
         fab_default_sort.hide();
 
         fab_main.setOnClickListener(view -> {
+
             if(!isFABOpen){
+
                 showFABMenu();
             }else{
+
                 closeFABMenu();
             }
         });
 
         fab_worker.setOnClickListener(view -> {
+
             if(mode!=2) {
+
                 removeCards();
                 addCardWorker();
                 mode = 2;
@@ -100,7 +104,9 @@ public class ScrollingActivity extends AppCompatActivity {
         });
 
         fab_first_available.setOnClickListener(view -> {
+
             if(mode != 1) {
+
                 removeCards();
                 addCardFirstAvailable();
                 mode = 1;
@@ -109,7 +115,9 @@ public class ScrollingActivity extends AppCompatActivity {
         });
 
         fab_default_sort.setOnClickListener(view -> {
+
             if(mode != 0) {
+
                 removeCards();
                 addAllCards();
                 mode = 0;
@@ -119,17 +127,20 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void deleteOldAppointmentsStart() {
-        //TODO This doesn't work
+
         db.collection("workers")
                 .get()
                 .addOnCompleteListener(task -> {
+
                     if (task.isSuccessful()) {
+
                         for (QueryDocumentSnapshot document : task.getResult()) {
+
                             workerID = document.getId();
-                            Log.d(TAG, "DELETE current worker document: " + workerID);
                             deleteOldAppointments(workerID);
                         }
                     } else {
+
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
@@ -142,19 +153,17 @@ public class ScrollingActivity extends AppCompatActivity {
                 .collection("schedule")
                 .get()
                 .addOnCompleteListener(task1 -> {
+
                     if(task1.isSuccessful()){
+
                         for (QueryDocumentSnapshot document1 : task1.getResult()) {
+
                             String documentID = document1.getId();
-                            Log.d(TAG, "DELETE current schedule day: " + documentID);
                             int day = Integer.parseInt(Objects.requireNonNull(document1.getString("day")));
                             int hour = Integer.parseInt(Objects.requireNonNull(document1.getString("hour")));
-                            Log.d(TAG, "DELETE current day: " + day);
-                            Log.d(TAG, "DELETE current hour: " + hour);
+
                             if(day < currentDay){
-                                Log.d(TAG, "DELETE day " + day
-                                        + " is lower than currentDay " + currentDay
-                                        + " so this should be updated");
-                                Log.d(TAG, "current document that i'm about to change" + documentID);
+
                                 db.collection("workers")
                                         .document(workerID)
                                         .collection("schedule")
@@ -167,13 +176,11 @@ public class ScrollingActivity extends AppCompatActivity {
                                         .document(documentID)
                                         .update("bookedby", "");
                             }
+
                             if(day == currentDay){
+
                                 if(hour <= currentHour){
-                                    Log.d(TAG, "DELETE day " + day
-                                            + " is equal to currentDay " + currentDay
-                                            + " but hour " + hour
-                                            + " is lower or equal currentHour " + currentHour
-                                            + " so this should be updated ");
+
                                     db.collection("workers")
                                             .document(workerID)
                                             .collection("schedule")
@@ -193,13 +200,14 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void removeCards() {
+
         layout.removeAllViews();
     }
 
     @SuppressLint("SetTextI18n")
     private void addCard(int workerNum) {
-        View card = getLayoutInflater().inflate(R.layout.card_layout, layout, false);
 
+        View card = getLayoutInflater().inflate(R.layout.card_layout, layout, false);
         TextView nameWorker = card.findViewById(R.id.nameWorker);
         RatingBar RatingBar = card.findViewById(R.id.ratingBar);
         Button submitButton = card.findViewById(R.id.submitButton);
@@ -211,9 +219,12 @@ public class ScrollingActivity extends AppCompatActivity {
 
         DocumentReference docRef = db.collection("workers").document(String.valueOf(workerNum));
         docRef.get().addOnCompleteListener(task -> {
+
             if (task.isSuccessful()) {
+
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
+
                     Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     name = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getName();
                     nameWorker.setText(name);
@@ -227,34 +238,44 @@ public class ScrollingActivity extends AppCompatActivity {
                             .whereEqualTo("booked", false)
                             .get()
                             .addOnCompleteListener(task1 -> {
+
                                 if (task1.isSuccessful()) {
+
                                     for (QueryDocumentSnapshot document1 : task1.getResult()) {
+
                                         int day = Integer.parseInt(Objects.requireNonNull(document1.getString("day")));
                                         int hour = Integer.parseInt(Objects.requireNonNull(document1.getString("hour")));
                                         if(day > currentDay){
                                             first_available_slot.setText("Currently available. Click to see when");
                                         }
+
                                         if(day == currentDay){
+
                                             if(hour > currentHour){
+
                                                 first_available_slot.setText("Currently available. Click to see when");
                                             }
                                         }
                                     }
                                 } else {
+
                                     Log.d(TAG, "Error getting documents: ", task.getException());
                                 }
                             });
 
                 } else {
+
                     Log.d(TAG, "No such document");
                 }
             } else {
+
                 Log.d(TAG, "get failed with ", task.getException());
             }
         });
 
         // perform click event on button
         submitButton.setOnClickListener(v -> {
+
             DocumentReference changerating = db.collection("workers").document(String.valueOf(workerNum));
             changerating.update("rating", RatingBar.getRating()).addOnSuccessListener(aVoid ->
                     Log.d(TAG, "DocumentSnapshot successfully updated!"))
@@ -265,7 +286,6 @@ public class ScrollingActivity extends AppCompatActivity {
         });
 
         card.setOnClickListener(view -> openWorkerActivity(workerNum));
-
         layout.addView(card);
     }
 
@@ -275,12 +295,16 @@ public class ScrollingActivity extends AppCompatActivity {
                 .orderBy("rating", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
+
                     if (task.isSuccessful()) {
+
                         for (QueryDocumentSnapshot document : task.getResult()) {
+
                             workerID = document.getId();
                             addCard(Integer.parseInt(workerID));
                         }
                     } else {
+
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
@@ -292,12 +316,16 @@ public class ScrollingActivity extends AppCompatActivity {
         db.collection("workers")
                 .get()
                 .addOnCompleteListener(task -> {
+
                     if (task.isSuccessful()) {
+
                         for (QueryDocumentSnapshot document : task.getResult()) {
+
                             workerID = document.getId();
                             addCard(Integer.parseInt(workerID));
                         }
                     } else {
+
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
@@ -321,12 +349,16 @@ public class ScrollingActivity extends AppCompatActivity {
                 .whereGreaterThan("hour", currentHour)
                 .get()
                 .addOnCompleteListener(task -> {
+
                     if (task.isSuccessful()) {
+
                         for (QueryDocumentSnapshot document : task.getResult()) {
+
                             workerID = document.getString("workerID");
                             addCard(Integer.parseInt(Objects.requireNonNull(workerID)));
                         }
                     } else {
+
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
@@ -334,6 +366,7 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void showFABMenu(){
+
         isFABOpen=true;
         fab_worker.show();
         fab_first_available.show();
@@ -344,6 +377,7 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void closeFABMenu(){
+
         isFABOpen=false;
         fab_worker.animate().translationY(0);
         fab_first_available.animate().translationY(0);
@@ -355,6 +389,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_scrolling, menu);
         return true;
@@ -362,6 +397,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -369,10 +405,12 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             openSettingsActivity();
         }
 
         if(id == R.id.action_logout) {
+
             openLoginActivity();
             fAuth.signOut();
             Toast.makeText(ScrollingActivity.this, "Log-out Successful", Toast.LENGTH_SHORT).show();
@@ -393,6 +431,7 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void openWorkerActivity(int workerNum) {
+
         Intent intent = new Intent(this, WorkerActivity.class);
         intent.putExtra("key",workerNum);
         startActivity(intent);

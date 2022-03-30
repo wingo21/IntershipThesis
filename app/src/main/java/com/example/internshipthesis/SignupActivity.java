@@ -6,7 +6,6 @@ import android.os.Bundle;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -16,8 +15,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -40,6 +37,7 @@ public class SignupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_signup);
@@ -59,6 +57,7 @@ public class SignupActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
 
         final String[] carBrands = new String[]{
+
                 "Lamborghini",
                 "Bugatti",
                 "Porsche",
@@ -68,10 +67,12 @@ public class SignupActivity extends AppCompatActivity {
         };
 
         final String[] carModels = new String[]{
+
                 "Choose a car brand first",
         };
 
         final String[] lamborghiniModels = new String[]{
+
                 "Aventador",
                 "Urus",
                 "Sian",
@@ -80,6 +81,7 @@ public class SignupActivity extends AppCompatActivity {
         };
 
         final String[] bugattiModels = new String[]{
+
                 "Centodieci",
                 "Chiron",
                 "Veyron",
@@ -88,6 +90,7 @@ public class SignupActivity extends AppCompatActivity {
         };
 
         final String[] porscheModels = new String[]{
+
                 "Cayenne",
                 "Macan",
                 "Taycan",
@@ -96,6 +99,7 @@ public class SignupActivity extends AppCompatActivity {
         };
 
         final String[] bentleyModels = new String[]{
+
                 "Continental",
                 "Flying Spur",
                 "Bentayga",
@@ -103,6 +107,7 @@ public class SignupActivity extends AppCompatActivity {
         };
 
         final String[] ferrariModels = new String[]{
+
                 "Roma",
                 "Portofino",
                 "California",
@@ -111,6 +116,7 @@ public class SignupActivity extends AppCompatActivity {
         };
 
         final String[] mercedesModels = new String[]{
+
                 "Classe A",
                 "Classe C",
                 "Classe E",
@@ -133,52 +139,63 @@ public class SignupActivity extends AppCompatActivity {
         autoCompleteTextViewCarModel.setAdapter(adapterCarModel);
 
         autoCompleteTextViewCarBrand.setOnItemClickListener((parent, view, position, id) -> {
+
             brand = autoCompleteTextViewCarBrand.getText().toString();
             if (autoCompleteTextViewCarBrand.getText().toString().equals("Lamborghini")) {
+
                 ArrayAdapter<String> adapterLamborghini = new ArrayAdapter<>(
                         SignupActivity.this,
                         R.layout.dropdown_item,
                         lamborghiniModels
                 );
+
                 autoCompleteTextViewCarModel.setAdapter(adapterLamborghini);
             } else if (brand.equals("Bugatti")) {
+
                 ArrayAdapter<String> adapterBugatti = new ArrayAdapter<>(
                         SignupActivity.this,
                         R.layout.dropdown_item,
                         bugattiModels
                 );
+
                 autoCompleteTextViewCarModel.setAdapter(adapterBugatti);
             } else if (brand.equals("Porsche")) {
+
                 ArrayAdapter<String> adapterPorsche = new ArrayAdapter<>(
                         SignupActivity.this,
                         R.layout.dropdown_item,
                         porscheModels
                 );
+
                 autoCompleteTextViewCarModel.setAdapter(adapterPorsche);
             } else if (brand.equals("Ferrari")) {
+
                 ArrayAdapter<String> adapterFerrari = new ArrayAdapter<>(
                         SignupActivity.this,
                         R.layout.dropdown_item,
                         ferrariModels
                 );
+
                 autoCompleteTextViewCarModel.setAdapter(adapterFerrari);
             } else if (brand.equals("Bentley")) {
+
                 ArrayAdapter<String> adapterBentley = new ArrayAdapter<>(
                         SignupActivity.this,
                         R.layout.dropdown_item,
                         bentleyModels
                 );
+
                 autoCompleteTextViewCarModel.setAdapter(adapterBentley);
             } else if (brand.equals("Mercedes")){
+
                 ArrayAdapter<String> adapterMercedes = new ArrayAdapter<>(
                         SignupActivity.this,
                         R.layout.dropdown_item,
                         mercedesModels
                 );
+
                 autoCompleteTextViewCarModel.setAdapter(adapterMercedes);
             }
-
-
         });
     }
 
@@ -187,35 +204,100 @@ public class SignupActivity extends AppCompatActivity {
 
         super.onStart();
 
-        // Sezione per il settaggio del pulsante signupButton, con controlli sugli elementi username, email e password
+        // Sezione per il settaggio del pulsante signupButton, con controlli sugli elementi username,
+        // email e password
         signupButton.setOnClickListener(v -> {
 
-            if (Objects.requireNonNull(inputUsername.getEditText()).getText().toString().trim().equals("")
-                    || Objects.requireNonNull(inputEmail.getEditText()).getText().toString().trim().equals("")
-                    || Objects.requireNonNull(inputPassword.getEditText()).getText().toString().trim().equals("")) {
-                Toast.makeText(getApplicationContext(), "Username, Email and Password cannot be empty", Toast.LENGTH_SHORT).show();
+            if (Objects.requireNonNull(
+                    inputUsername.getEditText())
+                    .getText()
+                    .toString()
+                    .trim()
+                    .equals("")
+                    || Objects.requireNonNull(
+                            inputEmail.getEditText())
+                    .getText().toString()
+                    .trim()
+                    .equals("")
+                    || Objects.requireNonNull(
+                            inputPassword.getEditText())
+                    .getText()
+                    .toString()
+                    .trim()
+                    .equals("")) {
+                Toast.makeText(getApplicationContext(),
+                        "Username, Email and Password cannot be empty", Toast.LENGTH_SHORT).show();
             }
-            else if (!isValidEmail(inputEmail.getEditText().getText().toString().trim())) {
+
+            else if (!isValidEmail(
+                    inputEmail.getEditText()
+                            .getText()
+                            .toString()
+                            .trim())) {
                 Toast.makeText(getApplicationContext(), "Invalid Email", Toast.LENGTH_SHORT).show();
             }
-            else if (inputPassword.getEditText().getText().toString().length() < 8) {
-                Toast.makeText(getApplicationContext(), "Password must be at least 8 characters long", Toast.LENGTH_SHORT).show();
+
+            else if (inputPassword.getEditText()
+                    .getText()
+                    .toString()
+                    .length() < 8) {
+                Toast.makeText(getApplicationContext(),
+                        "Password must be at least 8 characters long", Toast.LENGTH_SHORT).show();
             }
+
             else if (inputPassword.getEditText().getText().toString().contains(" ")) {
-                Toast.makeText(getApplicationContext(), "Password cannot contain space character", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(getApplicationContext(),
+                        "Password cannot contain space character", Toast.LENGTH_SHORT).show();
             }
-            else if (!Objects.requireNonNull(confirmPassword.getEditText()).getText().toString().equals(inputPassword.getEditText().getText().toString())) {
+
+            else if (!Objects.requireNonNull(
+                    confirmPassword.getEditText())
+                    .getText()
+                    .toString()
+                    .equals(
+                            inputPassword
+                                    .getEditText()
+                                    .getText()
+                                    .toString())) {
                 Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
             }
-            else if (Objects.requireNonNull(autoCompleteTextViewCarBrand).getText().toString().trim().equals("")
-                    || Objects.requireNonNull(autoCompleteTextViewCarModel).getText().toString().trim().equals("")
-                    || Objects.requireNonNull(autoCompleteTextViewCarModel).getText().toString().trim().equals("Choose a car brand first")) {
-                Toast.makeText(getApplicationContext(), "Car Brand or Model cannot be empty", Toast.LENGTH_SHORT).show();
+            else if (Objects.requireNonNull(
+                    autoCompleteTextViewCarBrand)
+                    .getText()
+                    .toString()
+                    .trim()
+                    .equals("")
+                    || Objects.requireNonNull(
+                            autoCompleteTextViewCarModel)
+                    .getText()
+                    .toString()
+                    .trim()
+                    .equals("")
+                    || Objects.requireNonNull(
+                            autoCompleteTextViewCarModel)
+                    .getText()
+                    .toString()
+                    .trim()
+                    .equals("Choose a car brand first")) {
+                Toast.makeText(getApplicationContext(), "Car Brand or Model cannot be empty",
+                        Toast.LENGTH_SHORT).show();
             }
             else {
 
-                fAuth.createUserWithEmailAndPassword(inputEmail.getEditText().getText().toString().trim(),inputPassword.getEditText().getText().toString().trim()).addOnCompleteListener((task) -> {
+                fAuth.createUserWithEmailAndPassword(
+                        inputEmail.getEditText()
+                                .getText()
+                                .toString()
+                                .trim(),
+                        inputPassword.getEditText()
+                                .getText()
+                                .toString()
+                                .trim())
+                        .addOnCompleteListener((task) -> {
+
                     if(task.isSuccessful()){
+
                         Toast.makeText(SignupActivity.this, "User Created", Toast.LENGTH_SHORT).show();
                         userID = Objects.requireNonNull(fAuth.getCurrentUser()).getUid();
                         DocumentReference documentReference = db.collection("users").document(userID);
@@ -228,6 +310,7 @@ public class SignupActivity extends AppCompatActivity {
                         documentReference.set(user).addOnSuccessListener(aVoid -> Log.d("TAG", "onSuccess: User profile is created for " + userID));
                         openLoginActivity();
                     }else{
+
                         Toast.makeText(SignupActivity.this, "Error!" + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -245,6 +328,7 @@ public class SignupActivity extends AppCompatActivity {
 
     // Metodo per controllare se l'email inserita ha pattern accettabile
     public static boolean isValidEmail(CharSequence target) {
+
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 }
