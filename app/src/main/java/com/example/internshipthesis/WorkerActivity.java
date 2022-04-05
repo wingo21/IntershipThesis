@@ -1,6 +1,8 @@
 package com.example.internshipthesis;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -211,7 +213,12 @@ public class WorkerActivity extends AppCompatActivity {
 
                                             AlertDialog dialog1 = new AlertDialog.Builder(WorkerActivity.this)
                                                     .setTitle("You successfully booked your appointment!")
-                                                    .setNeutralButton("Yay", (dialog2, whichButton1) -> finish())
+                                                    .setMessage("Do you want to navigate to the car dealership right now?")
+                                                    .setPositiveButton("Yes", (dialog2, whichButton1) -> {
+                                                        openGoogleMaps();
+                                                        finish();
+                                                    })
+                                                    .setNegativeButton("No", (dialog2, whichButton1) -> finish())
                                                     .create();
                                             dialog1.show();
                                         }
@@ -223,6 +230,12 @@ public class WorkerActivity extends AppCompatActivity {
         });
 
         layout.addView(appointment);
+    }
+
+    private void openGoogleMaps() {
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                Uri.parse("google.navigation:q=711 11th Ave, New York, NY 10019"));
+        startActivity(intent);
     }
 
     @Override
