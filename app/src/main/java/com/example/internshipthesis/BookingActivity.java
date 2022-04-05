@@ -27,6 +27,12 @@ import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
+/**
+ * This is the activity that shows the user the appointments he already booked.
+ * Users are allowed to book only one appointment with each worker
+ * until it expires or gets cancelled.
+ */
+
 public class BookingActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -41,6 +47,8 @@ public class BookingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        // Initialization of activity, implementation of scrolling feature requirements
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -53,6 +61,9 @@ public class BookingActivity extends AppCompatActivity {
         getInfoForBookings();
 
     }
+
+    // Function that pulls the workerIDs from the database, this function will pass
+    // the IDs to addAllBookings().
 
     private void getInfoForBookings() {
 
@@ -71,9 +82,13 @@ public class BookingActivity extends AppCompatActivity {
 
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                });
-
+                }
+        );
     }
+
+    // This function checks that only appointments that are booked by the user are shown
+    // in the list.
+    // For each appointment found, it calls addBooked() that will create the actual card.
 
     private void addAllBookings(int workerNum){
 
@@ -95,8 +110,11 @@ public class BookingActivity extends AppCompatActivity {
 
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                });
+                }
+        );
     }
+
+    // Function that pulls all the data from the database to fill the appointment card with
 
     @SuppressLint("SetTextI18n")
     private void addBooked(int workerNum) {
@@ -118,7 +136,6 @@ public class BookingActivity extends AppCompatActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
 
-                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     name = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getName();
                     nameWorker.setText(name);
                     workerImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
@@ -136,7 +153,6 @@ public class BookingActivity extends AppCompatActivity {
                                     for (QueryDocumentSnapshot document1 : task1.getResult()) {
 
                                         documentID = document1.getId();
-                                        Log.d(TAG, "BOOKING Current document: " + documentID);
                                         slot = (Objects.requireNonNull(document1.toObject(Classes.Worker.class))).getSlot();
                                         your_appointment.setText(slot);
                                     }
@@ -144,8 +160,8 @@ public class BookingActivity extends AppCompatActivity {
 
                                     Log.d(TAG, "Error getting documents: ", task1.getException());
                                 }
-                            });
-
+                            }
+                    );
                 } else {
 
                     Log.d(TAG, "No such document");
@@ -156,15 +172,15 @@ public class BookingActivity extends AppCompatActivity {
             }
         });
 
-        // perform click event on button
+        // This is the button that allows the user to cancel the appointment.
+        // If clicked, a dialog will pop up asking the user to confirm his choice.
+        // If the user clicks "Cancel", the dialog gets closed and nothing happens.
+        // If the user clicks "Confirm", the database gets updated deleting user info
+        // from the appropriate fields, making the appointment available to be
+        // booked again, then the activity gets closed.
+
         cancelBookingButton.setOnClickListener(v -> {
 
-            //TODO Bug: if the user books multiple appointments from the same worker,
-            // all the time slots will have the same value and the button that cancels the appointment
-            // will only cancel one card, leaving the others with a wrong booking information
-            // and unable to be cancelled
-            Log.d(TAG, "BUTTON This button belongs to: " + name);
-            Log.d(TAG, "BUTTON Current document: " + documentID);
             AlertDialog dialog = new AlertDialog.Builder(BookingActivity.this)
                     .setTitle("You are about to cancel this appointment. Are you sure?")
                     .setPositiveButton("Confirm", (dialog12, whichButton) -> {
@@ -173,13 +189,15 @@ public class BookingActivity extends AppCompatActivity {
                                 .document(String.valueOf(workerNum))
                                 .collection("schedule")
                                 .document(documentID)
-                                .update("booked", false);
+                                .update("booked", false)
+                        ;
 
                         db.collection("workers")
                                 .document(String.valueOf(workerNum))
                                 .collection("schedule")
                                 .document(documentID)
-                                .update("bookedby", "");
+                                .update("bookedby", "")
+                        ;
 
                         AlertDialog dialog1 = new AlertDialog.Builder(BookingActivity.this)
                                 .setTitle("You successfully cancelled your appointment")
@@ -195,6 +213,10 @@ public class BookingActivity extends AppCompatActivity {
         layout.addView(booking);
     }
 
+    // Function that opens WorkerActivity. Before doing that, it saves the workerNum in the
+    // bundle so that WorkerActivity will be able to fetch it and correctly pull information
+    // of the worker from the database.
+
     private void openWorkerActivity(int workerNum) {
 
         Intent intent = new Intent(this, WorkerActivity.class);
@@ -202,13 +224,15 @@ public class BookingActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // If the back arrow is pressed, the activity gets closed
+    // and the user is brought back to ScrollingActivity
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
 
-            finish(); // close this activity and return to preview activity (if there is any)
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

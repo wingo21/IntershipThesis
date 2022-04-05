@@ -17,8 +17,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Objects;
 
 /**
- *  Classe per gestire l'attività di login
- * */
+ *  This is the Activity that manages the access to the app.
+ *  Users can log in, or create a new account.
+ *  If the user is already logged in from a previous session,
+ *  the app will remember him and skip this Activity, launching
+ *  directly in ScrollingActivity.
+ */
+
 public class LoginActivity extends AppCompatActivity {
 
     Button login, signup;
@@ -28,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Initialization of activity and scrolling feature
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -43,39 +50,68 @@ public class LoginActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
     }
 
-    /** Crea la schermata di login */
     protected void onStart() {
 
         super.onStart();
+
+        // This checks if the user has already completed access in another session.
+        // If he did, ScrollingActivity gets opened instead.
 
         if(fAuth.getCurrentUser() != null) {
 
             openScrollingActivity();
         }
 
+        // This is the button that checks that the input fields are correctly filled in
+        // and completes the login process
+
         login.setOnClickListener(view ->
-                fAuth.signInWithEmailAndPassword(Objects.requireNonNull(email_field.getEditText()).getText().toString().trim(), Objects.requireNonNull(password_field.getEditText()).getText().toString().trim())
+
+                fAuth.signInWithEmailAndPassword(
+                        Objects.requireNonNull(
+                                email_field.getEditText())
+                                .getText()
+                                .toString()
+                                .trim(),
+                                Objects.requireNonNull(
+                                        password_field.getEditText())
+                                        .getText()
+                                        .toString()
+                                        .trim())
                         .addOnCompleteListener(task -> {
 
                             if(task.isSuccessful()) {
 
-                                Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this,
+                                        "Login Successful",
+                                        Toast.LENGTH_SHORT).show()
+                                ;
                                 progressBar.setVisibility(View.VISIBLE);
                                 openScrollingActivity();
                             }else{
 
-                                Toast.makeText(LoginActivity.this, "Error!" + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this,
+                                        "Error!" +
+                                                Objects.requireNonNull(task.getException())
+                                                        .getMessage(),
+                                        Toast.LENGTH_SHORT).show()
+                                ;
                             }
-        }));
+                        })
+        );
 
         signup.setOnClickListener(v -> openSignupActivity());
     }
+
+    // Function that opens ScrollingActivity
 
     private void openScrollingActivity() {
 
         Intent intent = new Intent(this, ScrollingActivity.class);
         startActivity(intent);
     }
+
+    // Function that opens SignupActivity
 
     private void openSignupActivity() {
 

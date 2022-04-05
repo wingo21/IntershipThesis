@@ -36,6 +36,14 @@ import java.util.Objects;
 import static android.content.ContentValues.TAG;
 import static java.time.LocalDate.now;
 
+/**
+ * This is the main activity of the app, here the user can see
+ * all available appointments, change how they are sorted
+ * (by best worker first, by first available appointment,
+ * by default sorting order), access each worker profile
+ * and finally access SettingsActivity.
+ */
+
 public class ScrollingActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -60,6 +68,8 @@ public class ScrollingActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
+        // Initialization of activity and scrolling feature
+
         setContentView(R.layout.activity_scrolling);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,16 +91,22 @@ public class ScrollingActivity extends AppCompatActivity {
         fab_first_available.hide();
         fab_default_sort.hide();
 
+        // This is the FAB that opens the FAB menu that allows the user
+        // to change the sorting of the cards
+
         fab_main.setOnClickListener(view -> {
 
             if(!isFABOpen){
 
                 showFABMenu();
-            }else{
+            } else {
 
                 closeFABMenu();
             }
         });
+
+        // This is the fab that changes the sorting to "best worker first"
+        // If the current sorting is already on "best worker first", the FAB menu just closes
 
         fab_worker.setOnClickListener(view -> {
 
@@ -103,6 +119,9 @@ public class ScrollingActivity extends AppCompatActivity {
             closeFABMenu();
         });
 
+        // This is the fab that changes the sorting to "first available appointment"
+        // If the current sorting is already on "first available appointment", the FAB menu just closes
+
         fab_first_available.setOnClickListener(view -> {
 
             if(mode != 1) {
@@ -113,6 +132,9 @@ public class ScrollingActivity extends AppCompatActivity {
             }
             closeFABMenu();
         });
+
+        // This is the fab that changes the sorting to "default order"
+        // If the current sorting is already on "default order", the FAB menu just closes
 
         fab_default_sort.setOnClickListener(view -> {
 
@@ -125,6 +147,11 @@ public class ScrollingActivity extends AppCompatActivity {
             closeFABMenu();
         });
     }
+
+    // Before any card is created, the app checks the current day and hour so if there are currently
+    // booked appointment that have expired, they will be made available again.
+    // This function just checks if the condition is met, if there is the need to update
+    // something deleteOldAppointments() will be called.
 
     private void deleteOldAppointmentsStart() {
 
@@ -143,10 +170,14 @@ public class ScrollingActivity extends AppCompatActivity {
 
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                });
+                }
+        );
     }
 
-    private void deleteOldAppointments(String workerID){
+    // This function actually accesses and modifies the database, changing expired
+    // appointments to make them available again
+
+    private void deleteOldAppointments(String workerID) {
 
         db.collection("workers")
                 .document(workerID)
@@ -154,55 +185,73 @@ public class ScrollingActivity extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task1 -> {
 
-                    if(task1.isSuccessful()){
+                    if(task1.isSuccessful()) {
 
                         for (QueryDocumentSnapshot document1 : task1.getResult()) {
 
                             String documentID = document1.getId();
-                            int day = Integer.parseInt(Objects.requireNonNull(document1.getString("day")));
-                            int hour = Integer.parseInt(Objects.requireNonNull(document1.getString("hour")));
+                            int day = Integer.parseInt(
+                                    Objects.requireNonNull(
+                                            document1.getString("day")
+                                    )
+                            );
+                            int hour = Integer.parseInt(
+                                    Objects.requireNonNull(
+                                            document1.getString("hour")
+                                    )
+                            );
 
-                            if(day < currentDay){
+                            if(day < currentDay) {
 
                                 db.collection("workers")
                                         .document(workerID)
                                         .collection("schedule")
                                         .document(documentID)
-                                        .update("booked", false);
+                                        .update("booked", false)
+                                ;
 
                                 db.collection("workers")
                                         .document(workerID)
                                         .collection("schedule")
                                         .document(documentID)
-                                        .update("bookedby", "");
+                                        .update("bookedby", "")
+                                ;
                             }
 
-                            if(day == currentDay){
+                            if(day == currentDay) {
 
-                                if(hour <= currentHour){
-
-                                    db.collection("workers")
-                                            .document(workerID)
-                                            .collection("schedule")
-                                            .document(documentID)
-                                            .update("booked", false);
+                                if(hour <= currentHour) {
 
                                     db.collection("workers")
                                             .document(workerID)
                                             .collection("schedule")
                                             .document(documentID)
-                                            .update("bookedby", "");
+                                            .update("booked", false)
+                                    ;
+
+                                    db.collection("workers")
+                                            .document(workerID)
+                                            .collection("schedule")
+                                            .document(documentID)
+                                            .update("bookedby", "")
+                                    ;
                                 }
                             }
                         }
                     }
-                });
+                }
+        );
     }
+
+    // Function that removes all cards currently generated, this is done when the sorting is changed
 
     private void removeCards() {
 
         layout.removeAllViews();
     }
+
+    // This is the function that actually creates the card, fills it with information from
+    // the database and adds it to the layout
 
     @SuppressLint("SetTextI18n")
     private void addCard(int workerNum) {
@@ -225,12 +274,17 @@ public class ScrollingActivity extends AppCompatActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
 
-                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    // All the informations about the worker are filled out
+
                     name = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getName();
                     nameWorker.setText(name);
                     rating = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getRating();
                     RatingBar.setRating(rating);
                     workerImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
+
+                    // Checks if the worker is available and changes the Textview accordingly.
+                    // If there are no available appointments for that worker, the TextView will be
+                    // left unchanged, which means that it till display "Currently not available"
 
                     db.collection("workers")
                             .document(String.valueOf(workerNum))
@@ -243,17 +297,30 @@ public class ScrollingActivity extends AppCompatActivity {
 
                                     for (QueryDocumentSnapshot document1 : task1.getResult()) {
 
-                                        int day = Integer.parseInt(Objects.requireNonNull(document1.getString("day")));
-                                        int hour = Integer.parseInt(Objects.requireNonNull(document1.getString("hour")));
-                                        if(day > currentDay){
-                                            first_available_slot.setText("Currently available. Click to see when");
+                                        int day = Integer.parseInt(
+                                                Objects.requireNonNull(
+                                                        document1.getString("day")
+                                                )
+                                        );
+                                        int hour = Integer.parseInt(
+                                                Objects.requireNonNull(
+                                                        document1.getString("hour")
+                                                )
+                                        );
+                                        if(day > currentDay) {
+
+                                            first_available_slot.setText(
+                                                    "Currently available. Click to see when")
+                                            ;
                                         }
 
-                                        if(day == currentDay){
+                                        if(day == currentDay) {
 
-                                            if(hour > currentHour){
+                                            if(hour > currentHour) {
 
-                                                first_available_slot.setText("Currently available. Click to see when");
+                                                first_available_slot.setText(
+                                                        "Currently available. Click to see when")
+                                                ;
                                             }
                                         }
                                     }
@@ -261,8 +328,8 @@ public class ScrollingActivity extends AppCompatActivity {
 
                                     Log.d(TAG, "Error getting documents: ", task.getException());
                                 }
-                            });
-
+                            }
+                    );
                 } else {
 
                     Log.d(TAG, "No such document");
@@ -273,21 +340,29 @@ public class ScrollingActivity extends AppCompatActivity {
             }
         });
 
-        // perform click event on button
+        // This button allows the user to change the rating of the worker and correctly save the
+        // changes to the database
+
         submitButton.setOnClickListener(v -> {
 
             DocumentReference changerating = db.collection("workers").document(String.valueOf(workerNum));
             changerating.update("rating", RatingBar.getRating()).addOnSuccessListener(aVoid ->
                     Log.d(TAG, "DocumentSnapshot successfully updated!"))
                     .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
-            // get values and then displayed in a toast
             String rating1 = "On a scale of 5 Stars\n New rating = " + RatingBar.getRating();
-            Toast.makeText(getApplicationContext(), rating1, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),
+                    rating1, Toast.LENGTH_LONG)
+                    .show()
+            ;
         });
 
         card.setOnClickListener(view -> openWorkerActivity(workerNum));
         layout.addView(card);
     }
+
+    // This function gets called when the user decides to sort the cards by
+    // "best worker first".
+    // This function will feed the workerIDs to addCard in the desired order
 
     private void addCardWorker() {
 
@@ -307,9 +382,14 @@ public class ScrollingActivity extends AppCompatActivity {
 
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                });
+                }
+        );
 
     }
+
+    // This function gets called when the app generates the list of cards when starting,
+    // or when the user selects "default order".
+    // This function will feed the workerIDs to addCard in the desired order
 
     private void addAllCards() {
 
@@ -328,9 +408,19 @@ public class ScrollingActivity extends AppCompatActivity {
 
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                });
+                }
+        );
 
     }
+
+    // This function gets called when the user decides to sort the cards by
+    // "first available appointment".
+    // The function looks at "Schedules" collection in the database and
+    // feeds the correct workerIDs to addCard() based on the current day and hour available
+    // appointment. If there are no appointments still available
+    // (in the schedule, doesn't check if the appointment is booked as of now)
+    // for the rest of the day, the list will be empty.
+    // This function will feed the workerIDs to addCard in the desired order
 
     private void addCardFirstAvailable(){
 
@@ -338,7 +428,7 @@ public class ScrollingActivity extends AppCompatActivity {
         // Even though he shouldn't be no longer available that day
         // Maybe add a button that let's the user choose which day he wants to see
 
-        if(currentDay == 7){
+        if(currentDay == 7) {
             currentDay = 1;
         }
 
@@ -361,9 +451,12 @@ public class ScrollingActivity extends AppCompatActivity {
 
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                });
+                }
+        );
 
     }
+
+    // Opens the FAB menu with animations
 
     private void showFABMenu(){
 
@@ -376,6 +469,8 @@ public class ScrollingActivity extends AppCompatActivity {
         fab_default_sort.animate().translationY(getResources().getDimension(R.dimen.standard_155));
     }
 
+    // Closes the FAB menu with animations
+
     private void closeFABMenu(){
 
         isFABOpen=false;
@@ -387,6 +482,8 @@ public class ScrollingActivity extends AppCompatActivity {
         fab_default_sort.hide();
     }
 
+    // Create the menu where the user can decide to either go to SettingsActivity or Log-out
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -395,15 +492,13 @@ public class ScrollingActivity extends AppCompatActivity {
         return true;
     }
 
+    // This specifies what each element in the menu will do
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
 
             openSettingsActivity();
@@ -413,10 +508,15 @@ public class ScrollingActivity extends AppCompatActivity {
 
             openLoginActivity();
             fAuth.signOut();
-            Toast.makeText(ScrollingActivity.this, "Log-out Successful", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ScrollingActivity.this,
+                    "Log-out Successful",
+                    Toast.LENGTH_SHORT).show()
+            ;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    // This is the function that opens the Login Activity
 
     private void openLoginActivity() {
 
@@ -424,11 +524,17 @@ public class ScrollingActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // This is the function that opens the Settings Activity
+
     private void openSettingsActivity() {
 
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
+
+    // This is the function that opens the Worker Activity, it also saves
+    // the workerID on a bundle so that WorkerActivity can retrieve it and
+    // pull correctly information from the database
 
     private void openWorkerActivity(int workerNum) {
 

@@ -8,6 +8,10 @@ import androidx.car.app.Screen;
 import androidx.car.app.Session;
 import androidx.car.app.validation.HostValidator;
 
+/**
+ * This helps InternshipThesisScreen work correctly
+ */
+
 public class InternshipThesisService extends CarAppService {
     
     @NonNull

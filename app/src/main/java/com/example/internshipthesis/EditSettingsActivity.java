@@ -1,6 +1,5 @@
 package com.example.internshipthesis;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,8 +24,9 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- *  Classe per gestire le impostazioni
- * */
+ *  This is the activity that allows the user to modify his profile information on the database
+ */
+
 public class EditSettingsActivity extends AppCompatActivity {
 
     Button saveEmailButton, savePasswordButton;
@@ -38,6 +38,8 @@ public class EditSettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Initialization of activity, implementation of scrolling feature
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_settings);
@@ -61,17 +63,30 @@ public class EditSettingsActivity extends AppCompatActivity {
 
         super.onStart();
 
-        // Sezione per il settaggio del pulsante saveEmailButton
+        // This is the button that checks the user's input on the E-Mail field
+        // If the input is valid, the database will get updated and the activity will be closed
+
         saveEmailButton.setOnClickListener(v -> {
 
-            final String e = Objects.requireNonNull(inputEmail.getEditText()).getText().toString().trim();
+            final String e = Objects.requireNonNull(
+                    inputEmail.getEditText())
+                    .getText()
+                    .toString()
+                    .trim()
+            ;
             if (e.equals("")) {
 
-                Toast.makeText(getApplicationContext(), "Field cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        "Field cannot be empty",
+                        Toast.LENGTH_SHORT).show()
+                ;
             }
             else if (!isValidEmail(e)) {
 
-                Toast.makeText(getApplicationContext(), "Email invalid", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        "Email invalid",
+                        Toast.LENGTH_SHORT).show()
+                ;
             }
             else {
 
@@ -91,34 +106,62 @@ public class EditSettingsActivity extends AppCompatActivity {
 
                                     DocumentReference documentReference = db.collection("users").document(documentID);
                                     documentReference.update(newEmail);
-                                    Toast.makeText(EditSettingsActivity.this, "Email successfully updated", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(EditSettingsActivity.this,
+                                            "Email successfully updated",
+                                            Toast.LENGTH_SHORT).show()
+                                    ;
                                     finish();
                                 }).addOnFailureListener(e1 ->
-                                        Toast.makeText(EditSettingsActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show());
+                                        Toast.makeText(EditSettingsActivity.this,
+                                                "Something went wrong",
+                                                Toast.LENGTH_SHORT).show())
+                                        ;
                             } else {
 
                                 Log.d("TAGERROR", "ERRORE");
                             }
-                        });
+                        }
+                );
             }
         });
 
-        // Sezione per il settaggio del pulsante savePasswordButton
+        // This is the button that checks the user's input on the Password field
+        // If the input is valid, the database will get updated and the activity will be closed
+
         savePasswordButton.setOnClickListener(v -> {
 
-            final String ip = Objects.requireNonNull(inputPassword.getEditText()).getText().toString().trim();
-            final String cp = Objects.requireNonNull(confirmPassword.getEditText()).getText().toString().trim();
+            final String ip = Objects.requireNonNull(
+                    inputPassword.getEditText())
+                    .getText()
+                    .toString()
+                    .trim()
+            ;
+            final String cp = Objects.requireNonNull(
+                    confirmPassword.getEditText())
+                    .getText()
+                    .toString()
+                    .trim()
+            ;
             if (ip.equals("")) {
 
-                Toast.makeText(getApplicationContext(), "Field cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        "Field cannot be empty",
+                        Toast.LENGTH_SHORT).show()
+                ;
             }
             else if (!ip.equals(cp)) {
 
-                Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        "Passwords do not match",
+                        Toast.LENGTH_SHORT).show()
+                ;
             }
             else if (ip.length() < 8) {
 
-                Toast.makeText(getApplicationContext(), "Password must be at least 8 characters long", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        "Password must be at least 8 characters long",
+                        Toast.LENGTH_SHORT).show()
+                ;
             }
             else {
 
@@ -138,31 +181,42 @@ public class EditSettingsActivity extends AppCompatActivity {
 
                                     DocumentReference documentReference = db.collection("users").document(documentID);
                                     documentReference.update(newPassword);
-                                    Toast.makeText(EditSettingsActivity.this, "Password successfully updated", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(EditSettingsActivity.this,
+                                            "Password successfully updated",
+                                            Toast.LENGTH_SHORT).show()
+                                    ;
                                     finish();
                                 }).addOnFailureListener(e1 ->
-                                        Toast.makeText(EditSettingsActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show());
+                                        Toast.makeText(EditSettingsActivity.this,
+                                                "Something went wrong",
+                                                Toast.LENGTH_SHORT).show())
+                                        ;
                             } else {
 
                                 Log.d("TAGERROR", "ERRORE");
                             }
-                        });
+                        }
+                );
             }
         });
     }
 
-    // Metodo per controllare se l'email inserita ha pattern accettabile
+    //This checks if the input E-Mail has an acceptable pattern
+
     public static boolean isValidEmail(CharSequence target) {
 
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
+    // If the back arrow is pressed, the activity gets closed
+    // and the user is brought back to ScrollingActivity
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // handle arrow click here
+
         if (item.getItemId() == android.R.id.home) {
 
-            finish(); // close this activity and return to preview activity (if there is any)
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

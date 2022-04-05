@@ -15,6 +15,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
+/**
+ * This Activity will show the user some information stored in the
+ * database about him (like his E-Mail or his car), it will also allow him
+ * to edit this information and go to the activity that shows currently booked appointments
+ */
+
 public class SettingsActivity extends AppCompatActivity {
 
     Button editSettings, bookings;
@@ -26,6 +32,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //Initialization of the app and scrolling feature
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
@@ -46,6 +54,9 @@ public class SettingsActivity extends AppCompatActivity {
         editSettings.setOnClickListener(view -> openEditSettingsActivity());
         bookings.setOnClickListener(view -> openBookingActivity());
 
+        // Pulls the username from the database to create Textview accordingly
+        // Also pulls info from the user profile to be shown
+
         db.collection("users")
                 .document(user)
                 .get().addOnCompleteListener(task -> {
@@ -64,11 +75,15 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    // Function that opens the Activity where the user can see currently booked appointments
+
     private void openBookingActivity() {
 
         Intent intent = new Intent(this, BookingActivity.class);
         startActivity(intent);
     }
+
+    // Function that opens the Activity where the user can modify his profile data
 
     private void openEditSettingsActivity() {
 
@@ -76,13 +91,15 @@ public class SettingsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // If the back arrow is pressed, the activity gets closed
+    // and the user is brought back to ScrollingActivity
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
 
-            finish(); // close this activity and return to preview activity (if there is any)
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

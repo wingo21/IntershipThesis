@@ -33,6 +33,13 @@ import java.util.Objects;
 import static android.content.ContentValues.TAG;
 import static java.time.LocalDate.now;
 
+/**
+ * This is the activity that gets opened when the user clicks on the worker card on
+ * ScrollingActivity or on the appointment card on BookingActivity.
+ * It shows more in depth information about the worker and all available appointments
+ * for the rest of the week.
+ **/
+
 public class WorkerActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -48,11 +55,13 @@ public class WorkerActivity extends AppCompatActivity {
     LocalTime currentTime = LocalTime.now();
     int currentHour = currentTime.getHour();
 
-    //TODO: Add more info to the worker profile
-    // (maybe a little description, full schedule, professional info, ecc)
+    // TODO: Add more info to the worker profile
+    //  (maybe a little description, full schedule, professional info, ecc)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Initialization of the activity layout, toolbar is custom to implement scrolling capability
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker);
@@ -63,6 +72,10 @@ public class WorkerActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        // WorkerActivity gets opened as a result of a click on the worker card on ScrollingActivity
+        // or the appointment on BookingActivity, this means that the workerNum needs to be
+        // shared from one activity to another to correctly pull information from the database
+
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
@@ -70,6 +83,8 @@ public class WorkerActivity extends AppCompatActivity {
             workerNum = extras.getInt("key");
             //The key argument here must match that used in the other activity
         }
+
+        // Initialization of fields that will be filled from database
 
         TextView nameWorker = findViewById(R.id.nameWorker);
         RatingBar RatingBar = findViewById(R.id.ratingBar);
@@ -79,6 +94,8 @@ public class WorkerActivity extends AppCompatActivity {
         String workerImgSrc = "worker" + workerNum; //  this is image file name
         String PACKAGE_NAME = getApplicationContext().getPackageName();
         int imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+workerImgSrc , null, null);
+
+        // Looking at the database to extract the worker information
 
         DocumentReference docRef = db.collection("workers").document(String.valueOf(workerNum));
         docRef.get().addOnCompleteListener(task -> {
@@ -105,7 +122,9 @@ public class WorkerActivity extends AppCompatActivity {
             }
         });
 
-        // perform click event on button
+        // Setting up the button that will be able to change the worker rating
+        // and update it on the database accordingly
+
         submitButton.setOnClickListener(v -> {
 
             DocumentReference changerating = db.collection("workers").document(String.valueOf(workerNum));
@@ -119,6 +138,12 @@ public class WorkerActivity extends AppCompatActivity {
 
         getInfoForAppointments(workerNum);
     }
+
+    // This function interrogates the database to access the correct collection
+    // to pull the data from, while doing this it also checks to not create a card
+    // for appointments that are either from earlier days in the week or earlier hours
+    // in the days (if it's Wednesday 10 AM, I shouldn't be able to book an appointment
+    // for Monday at any hour or for Wednesday at 9 AM for example)
 
     private void getInfoForAppointments(int workerNum){
 
@@ -159,6 +184,10 @@ public class WorkerActivity extends AppCompatActivity {
                 });
     }
 
+    // Now that getInfoForAppointments() has correctly selected which appointments to create,
+    // addAppointment can interrogate the database to pull the correct data and then create the
+    // appointment card to add to the screen
+
     private void addAppointment(String slot, String documentID) {
 
         View appointment = getLayoutInflater().inflate(R.layout.appointment_layout, layout, false);
@@ -166,65 +195,77 @@ public class WorkerActivity extends AppCompatActivity {
         Button bookButton = appointment.findViewById(R.id.bookButton);
         appointment_slot_textview.setText(slot);
 
-        // perform click event on button
+        // This is the button that allows the user to book the appointment
+        // if the button is pressed, a dialog will pop up, asking the user to confirm his
+        // choice.
+        // If the user clicks "Cancel", the dialog closes and nothing happens.
+        // If the user clicks "Confirm", another dialog pops up confirming that the
+        // the appointment has been successfully booked and asks the user if he wants
+        // to travel to the car dealership right away.
+        // If the user clicks "Yes", navigation towards the car dealership will start
+        // right away (on phone if Head Unit is not connected).
+        // If the user clicks "No" the dialog will close.
+        // After the dialog closes, WorkerActivity gets closed.
+
         bookButton.setOnClickListener(v -> {
 
             AlertDialog dialog = new AlertDialog.Builder(WorkerActivity.this)
                     .setTitle("You are about to book this appointment. Are you sure?")
-                    .setPositiveButton("Confirm", (dialog12, whichButton) -> {
+                    .setPositiveButton("Confirm", (dialog12, whichButton) ->
+                            db.collection("workers")
+                            .document(String.valueOf(workerNum))
+                            .collection("schedule")
+                            .get()
+                            .addOnCompleteListener(task -> {
 
-                        db.collection("workers")
-                                .document(String.valueOf(workerNum))
-                                .collection("schedule")
-                                .get()
-                                .addOnCompleteListener(task -> {
+                                if(task.isSuccessful()){
 
-                                    if(task.isSuccessful()){
+                                    boolean found = false;
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                        boolean found = false;
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                        String bookedby = document.getString("bookedby");
+                                        if(Objects.requireNonNull(bookedby).equals(user)){
 
-                                            String bookedby = document.getString("bookedby");
-                                            if(Objects.requireNonNull(bookedby).equals(user)){
-
-                                                found = true;
-                                                AlertDialog dialog2 = new AlertDialog.Builder(WorkerActivity.this)
-                                                        .setTitle("Cannot book appointment")
-                                                        .setMessage("You have already a booked appointment with this operator," +
-                                                                " please cancel to book a different appointment")
-                                                        .setNeutralButton("ok", null).create();
-                                                dialog2.show();
-                                            }
-                                        }
-
-                                        if(!found){
-
-                                            db.collection("workers")
-                                                    .document(String.valueOf(workerNum))
-                                                    .collection("schedule")
-                                                    .document(documentID)
-                                                    .update("booked", true);
-
-                                            db.collection("workers")
-                                                    .document(String.valueOf(workerNum))
-                                                    .collection("schedule")
-                                                    .document(documentID)
-                                                    .update("bookedby", user);
-
-                                            AlertDialog dialog1 = new AlertDialog.Builder(WorkerActivity.this)
-                                                    .setTitle("You successfully booked your appointment!")
-                                                    .setMessage("Do you want to navigate to the car dealership right now?")
-                                                    .setPositiveButton("Yes", (dialog2, whichButton1) -> {
-                                                        openGoogleMaps();
-                                                        finish();
-                                                    })
-                                                    .setNegativeButton("No", (dialog2, whichButton1) -> finish())
-                                                    .create();
-                                            dialog1.show();
+                                            found = true;
+                                            AlertDialog dialog2 = new AlertDialog.Builder(WorkerActivity.this)
+                                                    .setTitle("Cannot book appointment")
+                                                    .setMessage("You have already a booked appointment with this operator," +
+                                                            " please cancel to book a different appointment")
+                                                    .setNeutralButton("ok", null).create();
+                                            dialog2.show();
                                         }
                                     }
-                                });
-                    })
+
+                                    if(!found){
+
+                                        db.collection("workers")
+                                                .document(String.valueOf(workerNum))
+                                                .collection("schedule")
+                                                .document(documentID)
+                                                .update("booked", true)
+                                        ;
+
+                                        db.collection("workers")
+                                                .document(String.valueOf(workerNum))
+                                                .collection("schedule")
+                                                .document(documentID)
+                                                .update("bookedby", user)
+                                        ;
+
+                                        AlertDialog dialog1 = new AlertDialog.Builder(WorkerActivity.this)
+                                                .setTitle("You successfully booked your appointment!")
+                                                .setMessage("Do you want to navigate to the car dealership right now?")
+                                                .setPositiveButton("Yes", (dialog2, whichButton1) -> {
+                                                    openGoogleMaps();
+                                                    finish();
+                                                })
+                                                .setNegativeButton("No", (dialog2, whichButton1) -> finish())
+                                                .create();
+                                        dialog1.show();
+                                    }
+                                }
+                            }
+                    ))
                     .setNegativeButton("Cancel", null).create();
             dialog.show();
         });
@@ -232,19 +273,24 @@ public class WorkerActivity extends AppCompatActivity {
         layout.addView(appointment);
     }
 
+    // This is the function that allows the app to open google maps and start
+    // navigation towards the car dealership if the user chooses to.
+
     private void openGoogleMaps() {
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                 Uri.parse("google.navigation:q=711 11th Ave, New York, NY 10019"));
         startActivity(intent);
     }
 
+    // If the back arrow is pressed, the activity gets closed
+    // and the user is brought back to ScrollingActivity
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
 
-            finish(); // close this activity and return to preview activity (if there is any)
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

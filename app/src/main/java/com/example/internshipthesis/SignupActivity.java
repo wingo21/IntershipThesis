@@ -24,6 +24,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * This Activity manages the user creation process
+ */
+
 public class SignupActivity extends AppCompatActivity {
 
     Button signupButton, backButton;
@@ -37,6 +41,8 @@ public class SignupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Initialization of activity and scrolling feature
 
         super.onCreate(savedInstanceState);
 
@@ -55,6 +61,9 @@ public class SignupActivity extends AppCompatActivity {
         autoCompleteTextViewCarBrand = findViewById(R.id.autoCompleteCarBrand);
         autoCompleteTextViewCarModel = findViewById(R.id.autoCompleteCarModel);
         fAuth = FirebaseAuth.getInstance();
+
+        // The following String arrays are used in the menus that allow the user to select
+        // which car and model he owns
 
         final String[] carBrands = new String[]{
 
@@ -77,7 +86,6 @@ public class SignupActivity extends AppCompatActivity {
                 "Urus",
                 "Sian",
                 "Huracàn",
-
         };
 
         final String[] bugattiModels = new String[]{
@@ -86,7 +94,6 @@ public class SignupActivity extends AppCompatActivity {
                 "Chiron",
                 "Veyron",
                 "Bolide",
-
         };
 
         final String[] porscheModels = new String[]{
@@ -95,7 +102,6 @@ public class SignupActivity extends AppCompatActivity {
                 "Macan",
                 "Taycan",
                 "Panamera",
-
         };
 
         final String[] bentleyModels = new String[]{
@@ -103,7 +109,6 @@ public class SignupActivity extends AppCompatActivity {
                 "Continental",
                 "Flying Spur",
                 "Bentayga",
-
         };
 
         final String[] ferrariModels = new String[]{
@@ -112,7 +117,6 @@ public class SignupActivity extends AppCompatActivity {
                 "Portofino",
                 "California",
                 "LaFerrari",
-
         };
 
         final String[] mercedesModels = new String[]{
@@ -121,8 +125,9 @@ public class SignupActivity extends AppCompatActivity {
                 "Classe C",
                 "Classe E",
                 "Classe G",
-
         };
+
+        // The actual menus
 
         ArrayAdapter<String> adapterCarBrand = new ArrayAdapter<>(
                 SignupActivity.this,
@@ -137,6 +142,8 @@ public class SignupActivity extends AppCompatActivity {
                 carModels
         );
         autoCompleteTextViewCarModel.setAdapter(adapterCarModel);
+
+        // This implements the functionality of the menu when clicked
 
         autoCompleteTextViewCarBrand.setOnItemClickListener((parent, view, position, id) -> {
 
@@ -204,9 +211,13 @@ public class SignupActivity extends AppCompatActivity {
 
         super.onStart();
 
-        // Sezione per il settaggio del pulsante signupButton, con controlli sugli elementi username,
-        // email e password
+        // This is the button that completes the sign-in process, pulls all the input from
+        // the fields and saves it in the database. Once the data is all correctly saved, the user is
+        // automatically logged in and brought to ScrollingActivity
+
         signupButton.setOnClickListener(v -> {
+
+            // Checks if fields are empty
 
             if (Objects.requireNonNull(
                     inputUsername.getEditText())
@@ -226,30 +237,47 @@ public class SignupActivity extends AppCompatActivity {
                     .trim()
                     .equals("")) {
                 Toast.makeText(getApplicationContext(),
-                        "Username, Email and Password cannot be empty", Toast.LENGTH_SHORT).show();
+                        "Username, Email and Password cannot be empty",
+                        Toast.LENGTH_SHORT).show()
+                ;
             }
+
+            // Checks if E-Mail is valid
 
             else if (!isValidEmail(
                     inputEmail.getEditText()
                             .getText()
                             .toString()
                             .trim())) {
-                Toast.makeText(getApplicationContext(), "Invalid Email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        "Invalid Email",
+                        Toast.LENGTH_SHORT).show()
+                ;
             }
+
+            // Checks if Password is at least 8 characters long
 
             else if (inputPassword.getEditText()
                     .getText()
                     .toString()
                     .length() < 8) {
                 Toast.makeText(getApplicationContext(),
-                        "Password must be at least 8 characters long", Toast.LENGTH_SHORT).show();
+                        "Password must be at least 8 characters long",
+                        Toast.LENGTH_SHORT).show()
+                ;
             }
+
+            // Checks that Password does not contain space character
 
             else if (inputPassword.getEditText().getText().toString().contains(" ")) {
 
                 Toast.makeText(getApplicationContext(),
-                        "Password cannot contain space character", Toast.LENGTH_SHORT).show();
+                        "Password cannot contain space character",
+                        Toast.LENGTH_SHORT).show()
+                ;
             }
+
+            // Checks that Password and Confirm Password match
 
             else if (!Objects.requireNonNull(
                     confirmPassword.getEditText())
@@ -260,8 +288,14 @@ public class SignupActivity extends AppCompatActivity {
                                     .getEditText()
                                     .getText()
                                     .toString())) {
-                Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        "Passwords do not match",
+                        Toast.LENGTH_SHORT).show()
+                ;
             }
+
+            // Checks that the car brand and model are not left empty
+
             else if (Objects.requireNonNull(
                     autoCompleteTextViewCarBrand)
                     .getText()
@@ -280,9 +314,14 @@ public class SignupActivity extends AppCompatActivity {
                     .toString()
                     .trim()
                     .equals("Choose a car brand first")) {
-                Toast.makeText(getApplicationContext(), "Car Brand or Model cannot be empty",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        "Car Brand or Model cannot be empty",
+                        Toast.LENGTH_SHORT).show()
+                ;
             }
+
+            // Everything is good, we can create the user
+
             else {
 
                 fAuth.createUserWithEmailAndPassword(
@@ -298,7 +337,10 @@ public class SignupActivity extends AppCompatActivity {
 
                     if(task.isSuccessful()){
 
-                        Toast.makeText(SignupActivity.this, "User Created", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignupActivity.this,
+                                "User Created",
+                                Toast.LENGTH_SHORT).show()
+                        ;
                         userID = Objects.requireNonNull(fAuth.getCurrentUser()).getUid();
                         DocumentReference documentReference = db.collection("users").document(userID);
                         Map<String,Object> user = new HashMap<>();
@@ -307,11 +349,18 @@ public class SignupActivity extends AppCompatActivity {
                         user.put("password", inputPassword.getEditText().getText().toString().trim());
                         user.put("carBrand", autoCompleteTextViewCarBrand.getText().toString().trim());
                         user.put("carModel", autoCompleteTextViewCarModel.getText().toString().trim());
-                        documentReference.set(user).addOnSuccessListener(aVoid -> Log.d("TAG", "onSuccess: User profile is created for " + userID));
+                        documentReference.set(user).addOnSuccessListener(aVoid ->
+                                Log.d("TAG",
+                                        "onSuccess: User profile is created for " + userID))
+                                ;
                         openLoginActivity();
-                    }else{
+                    } else {
 
-                        Toast.makeText(SignupActivity.this, "Error!" + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignupActivity.this,
+                                "Error!" +
+                                        Objects.requireNonNull(task.getException()).getMessage(),
+                                Toast.LENGTH_SHORT).show()
+                        ;
                     }
                 });
             }
@@ -320,13 +369,16 @@ public class SignupActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> openLoginActivity());
     }
 
+    // Function that opens LoginActivity
+
     private void openLoginActivity() {
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
-    // Metodo per controllare se l'email inserita ha pattern accettabile
+    // Checks if E-Mail is valid
+
     public static boolean isValidEmail(CharSequence target) {
 
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());

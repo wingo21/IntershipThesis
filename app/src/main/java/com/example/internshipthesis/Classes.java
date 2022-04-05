@@ -3,11 +3,14 @@ package com.example.internshipthesis;
 import java.util.Date;
 
 /**
- * Classe per la gestione degli elementi da memorizzare nel database
- * */
+ * This Class helps to manage the database and pull information from it correctly inside
+ * other activities
+ */
+
 public class Classes {
 
-    /** CLASSE PER LA GESTIONE DEGLI UTENTI */
+    // User class (used for database management)
+
     public static class User {
 
         private String username;
@@ -32,6 +35,8 @@ public class Classes {
         public void setPassword(String password) {this.password = password;}
     }
 
+    // Worker class (used for database management)
+
     public static class Worker {
 
         private String name;
@@ -55,6 +60,8 @@ public class Classes {
         public void setRating(float rating) {this.rating = rating;}
         public void setSlot(String slot) {this.slot = slot;}
     }
+
+    // Schedules class (used for database management)
 
     public static class Schedules {
 
