@@ -130,8 +130,8 @@ public class BookingActivity extends AppCompatActivity {
         TextView emptyHelperText = emptyHelper.findViewById(R.id.emptyHelperText);
 
         emptyHelperImage.setImageResource(R.drawable.ic_baseline_sentiment_very_dissatisfied_24);
-        emptyHelperText.setText("It looks like you still have not booked any appointments,\n" +
-                "come back when you do!");
+        emptyHelperText.setText("It looks like you still have not booked any appointments.\n" +
+                "Come back when you do!");
 
         layout.addView(emptyHelper);
     }
