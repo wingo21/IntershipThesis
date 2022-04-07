@@ -131,7 +131,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 mode = 1;
                 removeCards();
                 addHelper(mode);
-                addCardFirstAvailable();
+                addCardFirstAvailableStart();
             }
             closeFABMenu();
         });
@@ -211,7 +211,7 @@ public class ScrollingActivity extends AppCompatActivity {
                                         .document(workerID)
                                         .collection("schedule")
                                         .document(documentID)
-                                        .update("booked", false)
+                                        .update("booked", "false")
                                 ;
 
                                 db.collection("workers")
@@ -230,7 +230,7 @@ public class ScrollingActivity extends AppCompatActivity {
                                             .document(workerID)
                                             .collection("schedule")
                                             .document(documentID)
-                                            .update("booked", false)
+                                            .update("booked", "false")
                                     ;
 
                                     db.collection("workers")
@@ -254,8 +254,8 @@ public class ScrollingActivity extends AppCompatActivity {
         layout.removeAllViews();
     }
 
-    // This function creates a card that helps the user better understand hwat he is looking at.
-    // The card is different for each sorting mode of the cards
+    // This function creates a card that helps the user better understand what he is looking at.
+    // The card is different for each sorting mode.
 
     @SuppressLint("SetTextI18n")
     private void addHelper(int mode) {
@@ -283,7 +283,6 @@ public class ScrollingActivity extends AppCompatActivity {
                         }
                     }
             );
-
         }
 
         if(mode == 1) {
@@ -362,7 +361,7 @@ public class ScrollingActivity extends AppCompatActivity {
                     db.collection("workers")
                             .document(String.valueOf(workerNum))
                             .collection("schedule")
-                            .whereEqualTo("booked", false)
+                            .whereEqualTo("booked", "false")
                             .get()
                             .addOnCompleteListener(task1 -> {
 
@@ -457,7 +456,6 @@ public class ScrollingActivity extends AppCompatActivity {
                     }
                 }
         );
-
     }
 
     // This function gets called when the app generates the list of cards when starting,
@@ -483,7 +481,6 @@ public class ScrollingActivity extends AppCompatActivity {
                     }
                 }
         );
-
     }
 
     // This function gets called when the user decides to sort the cards by
@@ -495,11 +492,7 @@ public class ScrollingActivity extends AppCompatActivity {
     // for the rest of the day, the list will be empty.
     // This function will feed the workerIDs to addCard in the desired order
 
-    private void addCardFirstAvailable() {
-
-        //TODO: Right now if you book an appointment, the worker still shows up on the list of available workers for the day
-        // Even though he shouldn't be no longer available that day
-        // Maybe add a button that let's the user choose which day he wants to see
+    private void addCardFirstAvailableStart() {
 
         if(currentDay == 7) {
             currentDay = 1;
@@ -518,7 +511,9 @@ public class ScrollingActivity extends AppCompatActivity {
                         for (QueryDocumentSnapshot document : task.getResult()) {
 
                             workerID = document.getString("workerID");
-                            addCard(Integer.parseInt(Objects.requireNonNull(workerID)));
+                            String day = String.valueOf(currentDay);
+                            Object hour = document.get("hour");
+                            addCardFirstAvailable(workerID, day, hour);
                         }
                     } else {
 
@@ -526,7 +521,36 @@ public class ScrollingActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
 
+    private void addCardFirstAvailable(String workerID, String day, Object hour) {
+
+        db.collection("workers")
+                .document(workerID)
+                .collection("schedule")
+                .get()
+                .addOnCompleteListener(task1 -> {
+
+                    if (task1.isSuccessful()) {
+
+                        for (QueryDocumentSnapshot document1 : task1.getResult()) {
+
+                            String booked = document1.getString("booked");
+                            String documentday = document1.getString("day");
+                            String documenthour = document1.getString("hour");
+
+                            if(Objects.requireNonNull(documentday).equals(day)
+                                    && Objects.requireNonNull(documenthour).equals(String.valueOf(hour))) {
+
+                                if(Objects.requireNonNull(booked).equals("false")) {
+
+                                    addCard(Integer.parseInt(Objects.requireNonNull(workerID)));
+                                }
+                            }
+                        }
+                    }
+                }
+        );
     }
 
     // Opens the FAB menu with animations

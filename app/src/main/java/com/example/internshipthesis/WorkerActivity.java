@@ -150,7 +150,7 @@ public class WorkerActivity extends AppCompatActivity {
         db.collection("workers")
                 .document(String.valueOf(workerNum))
                 .collection("schedule")
-                .whereEqualTo("booked", false)
+                .whereEqualTo("booked", "false")
                 .get()
                 .addOnCompleteListener(task -> {
 
@@ -242,7 +242,7 @@ public class WorkerActivity extends AppCompatActivity {
                                                 .document(String.valueOf(workerNum))
                                                 .collection("schedule")
                                                 .document(documentID)
-                                                .update("booked", true)
+                                                .update("booked", "true")
                                         ;
 
                                         db.collection("workers")
