@@ -145,7 +145,7 @@ public class WorkerActivity extends AppCompatActivity {
     // in the days (if it's Wednesday 10 AM, I shouldn't be able to book an appointment
     // for Monday at any hour or for Wednesday at 9 AM for example)
 
-    private void getInfoForAppointments(int workerNum){
+    private void getInfoForAppointments(int workerNum) {
 
         db.collection("workers")
                 .document(String.valueOf(workerNum))
@@ -163,9 +163,9 @@ public class WorkerActivity extends AppCompatActivity {
                             String nowDay = document.getString("day");
                             String nowHour = document.getString("hour");
 
-                            if(Integer.parseInt(Objects.requireNonNull(nowDay)) == currentDay){
+                            if(Integer.parseInt(Objects.requireNonNull(nowDay)) == currentDay) {
 
-                                if(Integer.parseInt(Objects.requireNonNull(nowHour)) > currentHour){
+                                if(Integer.parseInt(Objects.requireNonNull(nowHour)) > currentHour) {
 
                                     addAppointment(slot, documentID);
                                 }
@@ -218,13 +218,13 @@ public class WorkerActivity extends AppCompatActivity {
                             .get()
                             .addOnCompleteListener(task -> {
 
-                                if(task.isSuccessful()){
+                                if(task.isSuccessful()) {
 
                                     boolean found = false;
                                     for (QueryDocumentSnapshot document : task.getResult()) {
 
                                         String bookedby = document.getString("bookedby");
-                                        if(Objects.requireNonNull(bookedby).equals(user)){
+                                        if(Objects.requireNonNull(bookedby).equals(user)) {
 
                                             found = true;
                                             AlertDialog dialog2 = new AlertDialog.Builder(WorkerActivity.this)

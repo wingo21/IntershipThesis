@@ -81,6 +81,7 @@ public class ScrollingActivity extends AppCompatActivity {
         Log.d(TAG, "Current hour: " + currentHour);
 
         deleteOldAppointmentsStart();
+        addHelper(mode);
         addAllCards();
 
         fab_main = findViewById(R.id.fab_main);
@@ -112,9 +113,10 @@ public class ScrollingActivity extends AppCompatActivity {
 
             if(mode!=2) {
 
-                removeCards();
-                addCardWorker();
                 mode = 2;
+                removeCards();
+                addHelper(mode);
+                addCardWorker();
             }
             closeFABMenu();
         });
@@ -126,9 +128,10 @@ public class ScrollingActivity extends AppCompatActivity {
 
             if(mode != 1) {
 
-                removeCards();
-                addCardFirstAvailable();
                 mode = 1;
+                removeCards();
+                addHelper(mode);
+                addCardFirstAvailable();
             }
             closeFABMenu();
         });
@@ -140,9 +143,10 @@ public class ScrollingActivity extends AppCompatActivity {
 
             if(mode != 0) {
 
-                removeCards();
-                addAllCards();
                 mode = 0;
+                removeCards();
+                addHelper(mode);
+                addAllCards();
             }
             closeFABMenu();
         });
@@ -248,6 +252,75 @@ public class ScrollingActivity extends AppCompatActivity {
     private void removeCards() {
 
         layout.removeAllViews();
+    }
+
+    // This function creates a card that helps the user better understand hwat he is looking at.
+    // The card is different for each sorting mode of the cards
+
+    @SuppressLint("SetTextI18n")
+    private void addHelper(int mode) {
+
+        View helper = getLayoutInflater().inflate(R.layout.helper_layout, layout, false);
+        ImageView helperImage = helper.findViewById(R.id.helperImage);
+        TextView helperText = helper.findViewById(R.id.helperText);
+        String user = Objects.requireNonNull(fAuth.getCurrentUser()).getUid();
+
+        if(mode == 0) {
+
+            helperImage.setImageResource(R.drawable.ic_baseline_waving_hand_24);
+            db.collection("users")
+                    .document(Objects.requireNonNull(user))
+                    .get().addOnCompleteListener(task -> {
+
+                        if (task.isSuccessful()) {
+                            String username = task.getResult().getString("name");
+                            helperText.setText(String.format("Welcome %s!\n" +
+                                    "Here's a list of all the people that are ready to help you, " +
+                                    "Just click on their cards to see when they are available.\n" +
+                                    "Click on the button on the top right to change the order of the cards.\n" +
+                                    "Have a wonderful day!", username))
+                            ;
+                        }
+                    }
+            );
+
+        }
+
+        if(mode == 1) {
+
+            helperImage.setImageResource(R.drawable.ic_baseline_timer_24);
+            db.collection("users")
+                    .document(Objects.requireNonNull(user))
+                    .get().addOnCompleteListener(task -> {
+
+                        if (task.isSuccessful()) {
+                            helperText.setText("No time to lose!\n" +
+                                    "Here's all our staff available today!")
+                            ;
+                        }
+                    }
+            );
+        }
+
+        if(mode == 2) {
+
+            helperImage.setImageResource(R.drawable.ic_baseline_star_24);
+            db.collection("users")
+                    .document(Objects.requireNonNull(user))
+                    .get().addOnCompleteListener(task -> {
+
+                        if (task.isSuccessful()) {
+                            String username = task.getResult().getString("name");
+                            helperText.setText(String.format("You know your stuff %s!\n" +
+                                    "Here's all our guys, from best to slightly-less best.\n" +
+                                    "At your service!", username))
+                            ;
+                        }
+                    }
+            );
+        }
+
+        layout.addView(helper);
     }
 
     // This is the function that actually creates the card, fills it with information from
@@ -422,7 +495,7 @@ public class ScrollingActivity extends AppCompatActivity {
     // for the rest of the day, the list will be empty.
     // This function will feed the workerIDs to addCard in the desired order
 
-    private void addCardFirstAvailable(){
+    private void addCardFirstAvailable() {
 
         //TODO: Right now if you book an appointment, the worker still shows up on the list of available workers for the day
         // Even though he shouldn't be no longer available that day

@@ -67,7 +67,8 @@ public class SettingsActivity extends AppCompatActivity {
                 String carBrand = task.getResult().getString("carBrand");
                 String carModel = task.getResult().getString("carModel");
                 userprofile.setText(String.format(
-                        "Hey there %s! Here you can view and modify informations linked to your account.\n" +
+                        "Hey there %s!\n" +
+                        "Here you can view and modify informations linked to your account.\n" +
                         "Here's what we know about you:", name));
                 carShower.setText(String.format("%s %s", carBrand, carModel));
             }

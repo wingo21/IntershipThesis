@@ -60,5 +60,6 @@
     <string name="cancel_booking_button">cancel booking</string>
     <string name="see_bookings">check your appointments</string>
     <string name="title_activity_bookings">Your appointments</string>
+    <string name="helperText">helperText</string>
 
 </resources>
