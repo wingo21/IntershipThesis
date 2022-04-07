@@ -65,6 +65,7 @@ public class ScrollingActivity extends AppCompatActivity {
     LocalTime currentTime = LocalTime.now();
     int currentHour = currentTime.getHour();
     Boolean isFABOpen = false;
+    int empty = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -488,12 +489,8 @@ public class ScrollingActivity extends AppCompatActivity {
 
     // This function gets called when the user decides to sort the cards by
     // "first available appointment".
-    // The function looks at "Schedules" collection in the database and
-    // feeds the correct workerIDs to addCard() based on the current day and hour available
-    // appointment. If there are no appointments still available
-    // (in the schedule, doesn't check if the appointment is booked as of now)
-    // for the rest of the day, the list will be empty.
-    // This function will feed the workerIDs to addCard in the desired order
+    // The function checks the current day, hour and workerID and gives it as
+    // input to addCardFirstAvailable().
 
     private void addCardFirstAvailableStart() {
 
@@ -513,10 +510,16 @@ public class ScrollingActivity extends AppCompatActivity {
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
 
+                            empty++;
                             workerID = document.getString("workerID");
                             String day = String.valueOf(currentDay);
                             Object hour = document.get("hour");
                             addCardFirstAvailable(workerID, day, hour);
+                        }
+
+                        if(empty == 0) {
+                            addEmptyListHelper();
+                            empty++;
                         }
                     } else {
 
@@ -525,6 +528,15 @@ public class ScrollingActivity extends AppCompatActivity {
                 }
         );
     }
+
+    // This function gets called when the user decides to sort the cards by
+    // "first available appointment".
+    // The function looks at "Schedules" collection in the database and
+    // feeds the correct workerIDs to addCard() based on the current day and hour available
+    // appointment. If there are no appointments still available
+    // (in the schedule, doesn't check if the appointment is booked as of now)
+    // for the rest of the day, the list will be empty.
+    // This function will feed the workerIDs to addCard in the desired order
 
     private void addCardFirstAvailable(String workerID, String day, Object hour) {
 
@@ -554,6 +566,25 @@ public class ScrollingActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    // If the user has no appointments booked, the screen would be empty.
+    // If called, this function will create a helper card telling the user that
+    // there are no appointments booked.
+
+    @SuppressLint("SetTextI18n")
+    private void addEmptyListHelper() {
+
+        View emptyHelper = getLayoutInflater().inflate(R.layout.empty_list_helper_layout, layout, false);
+        ImageView emptyHelperImage = emptyHelper.findViewById(R.id.emptyHelperImage);
+        TextView emptyHelperText = emptyHelper.findViewById(R.id.emptyHelperText);
+
+        emptyHelperImage.setImageResource(R.drawable.ic_baseline_sentiment_very_dissatisfied_24);
+        emptyHelperText.setText("That's it for the day, sorry!\n" +
+                "Come back tomorrow to see new appointments available!")
+        ;
+
+        layout.addView(emptyHelper);
     }
 
     // Opens the FAB menu with animations

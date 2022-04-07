@@ -90,6 +90,7 @@ public class BookingActivity extends AppCompatActivity {
     // This function checks that only appointments that are booked by the user are shown
     // in the list.
     // For each appointment found, it calls addBooked() that will create the actual card.
+    // If there are no appointments, addEmptyListHelper() will add a card telling the user so.
 
     private void addAllBookings(int workerNum){
 
@@ -122,6 +123,10 @@ public class BookingActivity extends AppCompatActivity {
         );
     }
 
+    // If the user has no appointments booked, the screen would be empty.
+    // If called, this function will create a helper card telling the user that
+    // there are no appointments booked.
+
     @SuppressLint("SetTextI18n")
     private void addEmptyListHelper() {
 
@@ -131,7 +136,8 @@ public class BookingActivity extends AppCompatActivity {
 
         emptyHelperImage.setImageResource(R.drawable.ic_baseline_sentiment_very_dissatisfied_24);
         emptyHelperText.setText("It looks like you still have not booked any appointments.\n" +
-                "Come back when you do!");
+                "Come back when you do!")
+        ;
 
         layout.addView(emptyHelper);
     }
