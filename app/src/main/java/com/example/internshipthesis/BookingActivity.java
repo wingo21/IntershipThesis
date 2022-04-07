@@ -43,6 +43,7 @@ public class BookingActivity extends AppCompatActivity {
     String name;
     String slot;
     String documentID;
+    int found = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,14 +105,35 @@ public class BookingActivity extends AppCompatActivity {
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
 
+                            found = 1;
                             addBooked(workerNum);
                         }
+
+                        if (found == 0) {
+                            addEmptyListHelper();
+                            found++;
+                        }
+
                     } else {
 
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 }
         );
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void addEmptyListHelper() {
+
+        View emptyHelper = getLayoutInflater().inflate(R.layout.empty_list_helper_layout, layout, false);
+        ImageView emptyHelperImage = emptyHelper.findViewById(R.id.emptyHelperImage);
+        TextView emptyHelperText = emptyHelper.findViewById(R.id.emptyHelperText);
+
+        emptyHelperImage.setImageResource(R.drawable.ic_baseline_sentiment_very_dissatisfied_24);
+        emptyHelperText.setText("It looks like you still have not booked any appointments,\n" +
+                "come back when you do!");
+
+        layout.addView(emptyHelper);
     }
 
     // Function that pulls all the data from the database to fill the appointment card with
