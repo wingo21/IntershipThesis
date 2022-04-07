@@ -495,6 +495,7 @@ public class ScrollingActivity extends AppCompatActivity {
     private void addCardFirstAvailableStart() {
 
         if(currentDay == 7) {
+
             currentDay = 1;
         }
 
@@ -518,6 +519,7 @@ public class ScrollingActivity extends AppCompatActivity {
                         }
 
                         if(empty == 0) {
+
                             addEmptyListHelper();
                             empty++;
                         }
