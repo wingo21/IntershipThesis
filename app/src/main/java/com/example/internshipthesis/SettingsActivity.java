@@ -61,18 +61,19 @@ public class SettingsActivity extends AppCompatActivity {
                 .document(user)
                 .get().addOnCompleteListener(task -> {
 
-            if (task.isSuccessful()) {
+                    if (task.isSuccessful()) {
 
-                String name = task.getResult().getString("name");
-                String carBrand = task.getResult().getString("carBrand");
-                String carModel = task.getResult().getString("carModel");
-                userprofile.setText(String.format(
-                        "Hey there %s!\n" +
-                        "Here you can view and modify informations linked to your account.\n" +
-                        "Here's what we know about you:", name));
-                carShower.setText(String.format("%s %s", carBrand, carModel));
-            }
-        });
+                        String name = task.getResult().getString("name");
+                        String carBrand = task.getResult().getString("carBrand");
+                        String carModel = task.getResult().getString("carModel");
+                        userprofile.setText(String.format(
+                                "Hey there %s!\n" +
+                                "Here you can view and modify informations linked to your account.\n" +
+                                "Here's what we know about you:", name));
+                        carShower.setText(String.format("%s %s", carBrand, carModel));
+                    }
+                }
+        );
 
     }
 

@@ -74,21 +74,20 @@ public class EditSettingsActivity extends AppCompatActivity {
                     .toString()
                     .trim()
             ;
+
             if (e.equals("")) {
 
                 Toast.makeText(getApplicationContext(),
                         "Field cannot be empty",
                         Toast.LENGTH_SHORT).show()
                 ;
-            }
-            else if (!isValidEmail(e)) {
+            } else if (!isValidEmail(e)) {
 
                 Toast.makeText(getApplicationContext(),
                         "Email invalid",
                         Toast.LENGTH_SHORT).show()
                 ;
-            }
-            else {
+            } else {
 
                 Map<String,Object> newEmail = new HashMap<>();
                 newEmail.put("email", e);
@@ -136,34 +135,33 @@ public class EditSettingsActivity extends AppCompatActivity {
                     .toString()
                     .trim()
             ;
+
             final String cp = Objects.requireNonNull(
                     confirmPassword.getEditText())
                     .getText()
                     .toString()
                     .trim()
             ;
+
             if (ip.equals("")) {
 
                 Toast.makeText(getApplicationContext(),
                         "Field cannot be empty",
                         Toast.LENGTH_SHORT).show()
                 ;
-            }
-            else if (!ip.equals(cp)) {
+            } else if (!ip.equals(cp)) {
 
                 Toast.makeText(getApplicationContext(),
                         "Passwords do not match",
                         Toast.LENGTH_SHORT).show()
                 ;
-            }
-            else if (ip.length() < 8) {
+            } else if (ip.length() < 8) {
 
                 Toast.makeText(getApplicationContext(),
                         "Password must be at least 8 characters long",
                         Toast.LENGTH_SHORT).show()
                 ;
-            }
-            else {
+            } else {
 
                 Map<String,Object> newPassword = new HashMap<>();
                 newPassword.put("password", ip);

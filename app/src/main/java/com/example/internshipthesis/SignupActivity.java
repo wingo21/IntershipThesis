@@ -65,7 +65,7 @@ public class SignupActivity extends AppCompatActivity {
         // The following String arrays are used in the menus that allow the user to select
         // which car and model he owns
 
-        final String[] carBrands = new String[]{
+        final String[] carBrands = new String[] {
 
                 "Lamborghini",
                 "Bugatti",
@@ -75,12 +75,12 @@ public class SignupActivity extends AppCompatActivity {
                 "Mercedes",
         };
 
-        final String[] carModels = new String[]{
+        final String[] carModels = new String[] {
 
                 "Choose a car brand first",
         };
 
-        final String[] lamborghiniModels = new String[]{
+        final String[] lamborghiniModels = new String[] {
 
                 "Aventador",
                 "Urus",
@@ -88,7 +88,7 @@ public class SignupActivity extends AppCompatActivity {
                 "Huracàn",
         };
 
-        final String[] bugattiModels = new String[]{
+        final String[] bugattiModels = new String[] {
 
                 "Centodieci",
                 "Chiron",
@@ -96,7 +96,7 @@ public class SignupActivity extends AppCompatActivity {
                 "Bolide",
         };
 
-        final String[] porscheModels = new String[]{
+        final String[] porscheModels = new String[] {
 
                 "Cayenne",
                 "Macan",
@@ -104,14 +104,14 @@ public class SignupActivity extends AppCompatActivity {
                 "Panamera",
         };
 
-        final String[] bentleyModels = new String[]{
+        final String[] bentleyModels = new String[] {
 
                 "Continental",
                 "Flying Spur",
                 "Bentayga",
         };
 
-        final String[] ferrariModels = new String[]{
+        final String[] ferrariModels = new String[] {
 
                 "Roma",
                 "Portofino",
@@ -119,7 +119,7 @@ public class SignupActivity extends AppCompatActivity {
                 "LaFerrari",
         };
 
-        final String[] mercedesModels = new String[]{
+        final String[] mercedesModels = new String[] {
 
                 "Classe A",
                 "Classe C",
@@ -193,7 +193,7 @@ public class SignupActivity extends AppCompatActivity {
                 );
 
                 autoCompleteTextViewCarModel.setAdapter(adapterBentley);
-            } else if (brand.equals("Mercedes")){
+            } else if (brand.equals("Mercedes")) {
 
                 ArrayAdapter<String> adapterMercedes = new ArrayAdapter<>(
                         SignupActivity.this,
@@ -244,11 +244,11 @@ public class SignupActivity extends AppCompatActivity {
 
             // Checks if E-Mail is valid
 
-            else if (!isValidEmail(
-                    inputEmail.getEditText()
+            else if (!isValidEmail(inputEmail.getEditText()
                             .getText()
                             .toString()
                             .trim())) {
+
                 Toast.makeText(getApplicationContext(),
                         "Invalid Email",
                         Toast.LENGTH_SHORT).show()
@@ -261,6 +261,7 @@ public class SignupActivity extends AppCompatActivity {
                     .getText()
                     .toString()
                     .length() < 8) {
+
                 Toast.makeText(getApplicationContext(),
                         "Password must be at least 8 characters long",
                         Toast.LENGTH_SHORT).show()
@@ -269,7 +270,11 @@ public class SignupActivity extends AppCompatActivity {
 
             // Checks that Password does not contain space character
 
-            else if (inputPassword.getEditText().getText().toString().contains(" ")) {
+            else if (inputPassword
+                    .getEditText()
+                    .getText()
+                    .toString()
+                    .contains(" ")) {
 
                 Toast.makeText(getApplicationContext(),
                         "Password cannot contain space character",
@@ -283,11 +288,11 @@ public class SignupActivity extends AppCompatActivity {
                     confirmPassword.getEditText())
                     .getText()
                     .toString()
-                    .equals(
-                            inputPassword
-                                    .getEditText()
-                                    .getText()
-                                    .toString())) {
+                    .equals(inputPassword
+                            .getEditText()
+                            .getText()
+                            .toString())) {
+
                 Toast.makeText(getApplicationContext(),
                         "Passwords do not match",
                         Toast.LENGTH_SHORT).show()
@@ -314,6 +319,7 @@ public class SignupActivity extends AppCompatActivity {
                     .toString()
                     .trim()
                     .equals("Choose a car brand first")) {
+
                 Toast.makeText(getApplicationContext(),
                         "Car Brand or Model cannot be empty",
                         Toast.LENGTH_SHORT).show()
@@ -335,12 +341,13 @@ public class SignupActivity extends AppCompatActivity {
                                 .trim())
                         .addOnCompleteListener((task) -> {
 
-                    if(task.isSuccessful()){
+                    if(task.isSuccessful()) {
 
                         Toast.makeText(SignupActivity.this,
                                 "User Created",
                                 Toast.LENGTH_SHORT).show()
                         ;
+
                         userID = Objects.requireNonNull(fAuth.getCurrentUser()).getUid();
                         DocumentReference documentReference = db.collection("users").document(userID);
                         Map<String,Object> user = new HashMap<>();
@@ -349,10 +356,7 @@ public class SignupActivity extends AppCompatActivity {
                         user.put("password", inputPassword.getEditText().getText().toString().trim());
                         user.put("carBrand", autoCompleteTextViewCarBrand.getText().toString().trim());
                         user.put("carModel", autoCompleteTextViewCarModel.getText().toString().trim());
-                        documentReference.set(user).addOnSuccessListener(aVoid ->
-                                Log.d("TAG",
-                                        "onSuccess: User profile is created for " + userID))
-                                ;
+                        documentReference.set(user);
                         openLoginActivity();
                     } else {
 

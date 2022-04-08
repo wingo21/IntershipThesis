@@ -101,7 +101,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         fab_main.setOnClickListener(view -> {
 
-            if(!isFABOpen){
+            if(!isFABOpen) {
 
                 showFABMenu();
             } else {
@@ -203,6 +203,7 @@ public class ScrollingActivity extends AppCompatActivity {
                                             document1.getString("day")
                                     )
                             );
+
                             int hour = Integer.parseInt(
                                     Objects.requireNonNull(
                                             document1.getString("hour")
@@ -378,11 +379,13 @@ public class ScrollingActivity extends AppCompatActivity {
                                                         document1.getString("day")
                                                 )
                                         );
+
                                         int hour = Integer.parseInt(
                                                 Objects.requireNonNull(
                                                         document1.getString("hour")
                                                 )
                                         );
+
                                         if(day > currentDay) {
 
                                             first_available_slot.setText(
@@ -423,8 +426,11 @@ public class ScrollingActivity extends AppCompatActivity {
 
             DocumentReference changerating = db.collection("workers").document(String.valueOf(workerNum));
             changerating.update("rating", RatingBar.getRating()).addOnSuccessListener(aVoid ->
+
                     Log.d(TAG, "DocumentSnapshot successfully updated!"))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
+                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e))
+            ;
+
             String rating1 = "On a scale of 5 Stars\n New rating = " + RatingBar.getRating();
             Toast.makeText(getApplicationContext(),
                     rating1, Toast.LENGTH_LONG)
@@ -590,7 +596,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
     // Opens the FAB menu with animations
 
-    private void showFABMenu(){
+    private void showFABMenu() {
 
         isFABOpen=true;
         fab_worker.show();
@@ -603,7 +609,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
     // Closes the FAB menu with animations
 
-    private void closeFABMenu(){
+    private void closeFABMenu() {
 
         isFABOpen=false;
         fab_worker.animate().translationY(0);

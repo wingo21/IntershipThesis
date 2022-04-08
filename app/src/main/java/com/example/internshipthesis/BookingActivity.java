@@ -92,7 +92,7 @@ public class BookingActivity extends AppCompatActivity {
     // For each appointment found, it calls addBooked() that will create the actual card.
     // If there are no appointments, addEmptyListHelper() will add a card telling the user so.
 
-    private void addAllBookings(int workerNum){
+    private void addAllBookings(int workerNum) {
 
         db.collection("workers")
                 .document(String.valueOf(workerNum))
@@ -111,10 +111,10 @@ public class BookingActivity extends AppCompatActivity {
                         }
 
                         if (found == 0) {
+
                             addEmptyListHelper();
                             found++;
                         }
-
                     } else {
 
                         Log.d(TAG, "Error getting documents: ", task.getException());
@@ -152,7 +152,7 @@ public class BookingActivity extends AppCompatActivity {
         Button cancelBookingButton = booking.findViewById(R.id.cancel_booking_Button);
         ImageView workerImage = booking.findViewById(R.id.workerImage);
         TextView your_appointment = booking.findViewById(R.id.textView3);
-        String workerImgSrc = "worker"+ workerNum; //  this is image file name
+        String workerImgSrc = "worker" + workerNum; //  this is image file name
         String PACKAGE_NAME = getApplicationContext().getPackageName();
         int imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+workerImgSrc , null, null);
 

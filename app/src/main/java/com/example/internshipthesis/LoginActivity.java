@@ -73,31 +73,30 @@ public class LoginActivity extends AppCompatActivity {
                                 .getText()
                                 .toString()
                                 .trim(),
-                                Objects.requireNonNull(
-                                        password_field.getEditText())
-                                        .getText()
-                                        .toString()
-                                        .trim())
-                        .addOnCompleteListener(task -> {
+                        Objects.requireNonNull(
+                                password_field.getEditText())
+                                .getText()
+                                .toString()
+                                .trim()
+                ).addOnCompleteListener(task -> {
 
-                            if(task.isSuccessful()) {
+                    if(task.isSuccessful()) {
 
-                                Toast.makeText(LoginActivity.this,
-                                        "Login Successful",
-                                        Toast.LENGTH_SHORT).show()
-                                ;
-                                progressBar.setVisibility(View.VISIBLE);
-                                openScrollingActivity();
-                            }else{
+                        Toast.makeText(LoginActivity.this,
+                                "Login Successful",
+                                Toast.LENGTH_SHORT).show()
+                        ;
+                        progressBar.setVisibility(View.VISIBLE);
+                        openScrollingActivity();
+                    } else {
 
-                                Toast.makeText(LoginActivity.this,
-                                        "Error!" +
-                                                Objects.requireNonNull(task.getException())
-                                                        .getMessage(),
-                                        Toast.LENGTH_SHORT).show()
-                                ;
-                            }
-                        })
+                        Toast.makeText(LoginActivity.this,
+                                "Error!" +
+                                        Objects.requireNonNull(task.getException()).getMessage(),
+                                Toast.LENGTH_SHORT).show()
+                        ;
+                    }
+                })
         );
 
         signup.setOnClickListener(v -> openSignupActivity());

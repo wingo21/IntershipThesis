@@ -105,7 +105,6 @@ public class WorkerActivity extends AppCompatActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
 
-                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     name = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getName();
                     nameWorker.setText(name);
                     rating = (Objects.requireNonNull(document.toObject(Classes.Worker.class))).getRating();
@@ -129,8 +128,11 @@ public class WorkerActivity extends AppCompatActivity {
 
             DocumentReference changerating = db.collection("workers").document(String.valueOf(workerNum));
             changerating.update("rating", RatingBar.getRating()).addOnSuccessListener(aVoid ->
+
                     Log.d(TAG, "DocumentSnapshot successfully updated!"))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
+                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e))
+            ;
+
             // get values and then displayed in a toast
             String rating1 = "On a scale of 5 Stars\n New rating = " + RatingBar.getRating();
             Toast.makeText(getApplicationContext(), rating1, Toast.LENGTH_LONG).show();
@@ -236,7 +238,7 @@ public class WorkerActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    if(!found){
+                                    if(!found) {
 
                                         db.collection("workers")
                                                 .document(String.valueOf(workerNum))
@@ -256,6 +258,7 @@ public class WorkerActivity extends AppCompatActivity {
                                                 .setTitle("You successfully booked your appointment!")
                                                 .setMessage("Do you want to navigate to the car dealership right now?")
                                                 .setPositiveButton("Yes", (dialog2, whichButton1) -> {
+
                                                     openGoogleMaps();
                                                     finish();
                                                 })
@@ -265,8 +268,7 @@ public class WorkerActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                    ))
-                    .setNegativeButton("Cancel", null).create();
+                    )).setNegativeButton("Cancel", null).create();
             dialog.show();
         });
 
