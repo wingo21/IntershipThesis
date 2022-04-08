@@ -521,7 +521,6 @@ public class ScrollingActivity extends AppCompatActivity {
                         if(empty == 0) {
 
                             addEmptyListHelper();
-                            empty++;
                         }
                     } else {
 
