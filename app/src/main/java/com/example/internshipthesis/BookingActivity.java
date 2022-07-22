@@ -22,6 +22,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Objects;
 
@@ -43,7 +44,7 @@ public class BookingActivity extends AppCompatActivity {
     String name;
     String slot;
     String documentID;
-    int found = 0;
+    int done = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,7 @@ public class BookingActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         layout = findViewById(R.id.thisonenew);
         getInfoForBookings();
-
+        Log.d(TAG, "done: " + done);
     }
 
     // Function that pulls the workerIDs from the database, this function will pass
@@ -75,6 +76,8 @@ public class BookingActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
+
+                            Log.d(TAG, "passo 1");
 
                             workerID = document.getId();
                             addAllBookings(Integer.parseInt(workerID));
@@ -104,17 +107,24 @@ public class BookingActivity extends AppCompatActivity {
 
                     if (task.isSuccessful()) {
 
-                        for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, "passo 2");
 
-                            found = 1;
-                            addBooked(workerNum);
-                        }
+                        QuerySnapshot document = task.getResult();
 
-                        if (found == 0) {
 
-                            addEmptyListHelper();
-                            found++;
-                        }
+
+                            Log.d(TAG, "passo 3");
+
+                            if(document.isEmpty()){
+
+                                addListHelper(0);
+                            }
+                            else{
+
+                                addListHelper(1);
+                                addBooked(workerNum);
+                            }
+
                     } else {
 
                         Log.d(TAG, "Error getting documents: ", task.getException());
@@ -128,18 +138,34 @@ public class BookingActivity extends AppCompatActivity {
     // there are no appointments booked.
 
     @SuppressLint("SetTextI18n")
-    private void addEmptyListHelper() {
+    private void addListHelper(int found) {
 
-        View emptyHelper = getLayoutInflater().inflate(R.layout.empty_list_helper_layout, layout, false);
-        ImageView emptyHelperImage = emptyHelper.findViewById(R.id.emptyHelperImage);
-        TextView emptyHelperText = emptyHelper.findViewById(R.id.emptyHelperText);
+        if(done == 0){
 
-        emptyHelperImage.setImageResource(R.drawable.ic_baseline_sentiment_very_dissatisfied_24);
-        emptyHelperText.setText("It looks like you still have not booked any appointments.\n" +
-                "Come back when you do!")
-        ;
+            View emptyHelper = getLayoutInflater().inflate(R.layout.empty_list_helper_layout, layout, false);
+            ImageView emptyHelperImage = emptyHelper.findViewById(R.id.emptyHelperImage);
+            TextView emptyHelperText = emptyHelper.findViewById(R.id.emptyHelperText);
 
-        layout.addView(emptyHelper);
+            if(found == 0){
+
+                emptyHelperImage.setImageResource(R.drawable.ic_baseline_sentiment_very_dissatisfied_24);
+                emptyHelperText.setText("It looks like you still have not booked any appointments.\n" +
+                        "Come back when you do!")
+                ;
+            }
+
+            if(found == 1){
+
+                emptyHelperImage.setImageResource(R.drawable.ic_baseline_waving_hand_24);
+                emptyHelperText.setText("Hey there friend!\n" +
+                        "Here are your booked appointments!")
+                ;
+            }
+
+            layout.addView(emptyHelper);
+        }
+
+        done = 1;
     }
 
     // Function that pulls all the data from the database to fill the appointment card with
@@ -179,6 +205,8 @@ public class BookingActivity extends AppCompatActivity {
                                 if (task1.isSuccessful()) {
 
                                     for (QueryDocumentSnapshot document1 : task1.getResult()) {
+
+                                        Log.d(TAG, "passo 4");
 
                                         documentID = document1.getId();
                                         slot = (Objects.requireNonNull(document1.toObject(Classes.Worker.class))).getSlot();
@@ -238,6 +266,7 @@ public class BookingActivity extends AppCompatActivity {
         });
 
         booking.setOnClickListener(view -> openWorkerActivity(workerNum));
+        Log.d(TAG, "done: " + done);
         layout.addView(booking);
     }
 
