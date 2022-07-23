@@ -61,7 +61,6 @@ public class BookingActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         layout = findViewById(R.id.thisonenew);
         getInfoForBookings();
-        Log.d(TAG, "done: " + done);
     }
 
     // Function that pulls the workerIDs from the database, this function will pass
@@ -76,8 +75,6 @@ public class BookingActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
-
-                            Log.d(TAG, "passo 1");
 
                             workerID = document.getId();
                             addAllBookings(Integer.parseInt(workerID));
@@ -107,13 +104,7 @@ public class BookingActivity extends AppCompatActivity {
 
                     if (task.isSuccessful()) {
 
-                        Log.d(TAG, "passo 2");
-
                         QuerySnapshot document = task.getResult();
-
-
-
-                            Log.d(TAG, "passo 3");
 
                             if(document.isEmpty()){
 
@@ -206,8 +197,6 @@ public class BookingActivity extends AppCompatActivity {
 
                                     for (QueryDocumentSnapshot document1 : task1.getResult()) {
 
-                                        Log.d(TAG, "passo 4");
-
                                         documentID = document1.getId();
                                         slot = (Objects.requireNonNull(document1.toObject(Classes.Worker.class))).getSlot();
                                         your_appointment.setText(slot);
@@ -266,7 +255,6 @@ public class BookingActivity extends AppCompatActivity {
         });
 
         booking.setOnClickListener(view -> openWorkerActivity(workerNum));
-        Log.d(TAG, "done: " + done);
         layout.addView(booking);
     }
 

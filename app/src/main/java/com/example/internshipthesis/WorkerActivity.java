@@ -1,5 +1,6 @@
 package com.example.internshipthesis;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -56,7 +57,7 @@ public class WorkerActivity extends AppCompatActivity {
     int currentHour = currentTime.getHour();
 
     // TODO: Add more info to the worker profile
-    //  (maybe a little description, full schedule, professional info, ecc)
+    //  (maybe a little description, professional info, ecc)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +139,28 @@ public class WorkerActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), rating1, Toast.LENGTH_LONG).show();
         });
 
+        addListHelper();
         getInfoForAppointments(workerNum);
+    }
+
+    // This function adds a little helper at the start of the list of appointments
+    // in the worker profile, so that it feels more clean and cohesive
+
+    @SuppressLint("SetTextI18n")
+    private void addListHelper() {
+
+        View emptyHelper = getLayoutInflater().inflate(R.layout.empty_list_helper_layout, layout, false);
+        ImageView emptyHelperImage = emptyHelper.findViewById(R.id.emptyHelperImage);
+        TextView emptyHelperText = emptyHelper.findViewById(R.id.emptyHelperText);
+
+        emptyHelperImage.setImageResource(R.drawable.ic_baseline_waving_hand_24);
+        emptyHelperText.setText("Hey there friend!\n" +
+                "Here are all available appointments for this great guy of ours!\n" +
+                "If you don't see any, that means that he is all booked up for this week," +
+                " sorry for the inconvenience!")
+        ;
+
+        layout.addView(emptyHelper);
     }
 
     // This function interrogates the database to access the correct collection
