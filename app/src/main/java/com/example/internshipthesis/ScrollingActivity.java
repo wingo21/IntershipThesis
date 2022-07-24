@@ -1,6 +1,5 @@
 package com.example.internshipthesis;
 
-import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -23,8 +22,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -499,11 +496,6 @@ public class ScrollingActivity extends AppCompatActivity {
     // input to addCardFirstAvailable().
 
     private void addCardFirstAvailableStart() {
-
-        if(currentDay == 7) {
-
-            currentDay = 1;
-        }
 
         db.collection("schedules")
                 .document(String.valueOf(currentDay))
