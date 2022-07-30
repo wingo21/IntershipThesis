@@ -15,9 +15,9 @@ import androidx.car.app.model.Template;
  * the car and will be able to communicate with it
  */
 
-public class InternshipThesisScreen extends Screen implements CarHardwareManager {
+public class MMBookerScreen extends Screen implements CarHardwareManager {
 
-    public InternshipThesisScreen(CarContext carContext) {
+    public MMBookerScreen(CarContext carContext) {
         super(carContext);
     }
 

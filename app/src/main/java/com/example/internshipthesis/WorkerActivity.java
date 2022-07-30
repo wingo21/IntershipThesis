@@ -56,9 +56,6 @@ public class WorkerActivity extends AppCompatActivity {
     LocalTime currentTime = LocalTime.now();
     int currentHour = currentTime.getHour();
 
-    // TODO: Add more info to the worker profile
-    //  (maybe a little description, professional info, ecc)
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -81,8 +78,8 @@ public class WorkerActivity extends AppCompatActivity {
 
         if (extras != null) {
 
-            workerNum = extras.getInt("key");
             //The key argument here must match that used in the other activity
+            workerNum = extras.getInt("key");
         }
 
         // Initialization of fields that will be filled from database
@@ -205,7 +202,8 @@ public class WorkerActivity extends AppCompatActivity {
 
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                });
+                }
+        );
     }
 
     // Now that getInfoForAppointments() has correctly selected which appointments to create,

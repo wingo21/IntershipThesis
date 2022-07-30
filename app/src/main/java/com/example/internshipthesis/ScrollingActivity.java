@@ -78,9 +78,6 @@ public class ScrollingActivity extends AppCompatActivity {
         toolBarLayout.setTitle(getTitle());
         layout = findViewById(R.id.thisone);
 
-        Log.d(TAG, "Current day: " + currentDay);
-        Log.d(TAG, "Current hour: " + currentHour);
-
         deleteOldAppointmentsStart();
         addHelper(mode);
         addAllCards();

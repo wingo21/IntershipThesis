@@ -57,7 +57,7 @@
             android:value="3" />
 
         <service
-            android:name=".InternshipThesisService"
+            android:name=".MMBookerService"
             android:exported="true"
             tools:ignore="ExportedService">
             <intent-filter>

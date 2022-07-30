@@ -9,10 +9,10 @@ import androidx.car.app.Session;
 import androidx.car.app.validation.HostValidator;
 
 /**
- * This helps InternshipThesisScreen work correctly
+ * This helps MMBookerScreen work correctly
  */
 
-public class InternshipThesisService extends CarAppService {
+public class MMBookerService extends CarAppService {
     
     @NonNull
     @Override
@@ -28,7 +28,7 @@ public class InternshipThesisService extends CarAppService {
             @NonNull
             @Override
             public Screen onCreateScreen(@NonNull Intent intent) {
-                 return new InternshipThesisScreen(getCarContext());
+                 return new MMBookerScreen(getCarContext());
             }
         };
     }
